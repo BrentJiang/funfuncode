@@ -28,6 +28,8 @@ namespace QRCodeMain
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<MvcQrCodeContext>(options =>
+                options.UseSqlite(Configuration.GetConnectionString("MvcQrCodeContext")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -37,6 +39,9 @@ namespace QRCodeMain
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();
+
+            services.AddDbContext<MvcQrCodeContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("MvcQrCodeContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

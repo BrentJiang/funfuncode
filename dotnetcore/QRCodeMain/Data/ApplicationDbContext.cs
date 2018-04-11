@@ -10,10 +10,6 @@ namespace QRCodeMain.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<QrCode> QrCodes { get; set; }
-        public DbSet<Article> Articles { get; set; }
-        public DbSet<Comment> Comments { get; set; }
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
