@@ -9,22 +9,22 @@ using QRCodeMain.Models;
 
 namespace QRCodeMain.Controllers
 {
-    public class QrCodeController : Controller
+    public class MyController : Controller
     {
         private readonly MvcQrCodeContext _context;
 
-        public QrCodeController(MvcQrCodeContext context)
+        public MyController(MvcQrCodeContext context)
         {
             _context = context;
         }
 
-        // GET: QrCode
+        // GET: My
         public async Task<IActionResult> Index()
         {
-            return View(await _context.QrCode.ToListAsync());
+            return View(await _context.Articles.ToListAsync());
         }
 
-        // GET: QrCode/Details/5
+        // GET: My/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,41 +32,39 @@ namespace QRCodeMain.Controllers
                 return NotFound();
             }
 
-            var qrCode = await _context.QrCode
-                .SingleOrDefaultAsync(m => m.QrCodeId == id);
-            if (qrCode == null)
+            var article = await _context.Articles
+                .SingleOrDefaultAsync(m => m.ArticleId == id);
+            if (article == null)
             {
                 return NotFound();
             }
 
-            return View(qrCode);
+            return View(article);
         }
 
-        // GET: QrCode/Create
+        // GET: My/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: QrCode/Create
+        // POST: My/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("QrCodeId")] QrCode qrCode)
+        public async Task<IActionResult> Create([Bind("ArticleId,Title,Content")] Article article)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(qrCode);
-                await _context.SaveChangesAsync();
-                qrCode.QrCodeRelativePath = $"My/{qrCode.QrCodeId}";
+                _context.Add(article);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(qrCode);
+            return View(article);
         }
 
-        // GET: QrCode/Edit/5
+        // GET: My/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,22 +72,22 @@ namespace QRCodeMain.Controllers
                 return NotFound();
             }
 
-            var qrCode = await _context.QrCode.SingleOrDefaultAsync(m => m.QrCodeId == id);
-            if (qrCode == null)
+            var article = await _context.Articles.SingleOrDefaultAsync(m => m.ArticleId == id);
+            if (article == null)
             {
                 return NotFound();
             }
-            return View(qrCode);
+            return View(article);
         }
 
-        // POST: QrCode/Edit/5
+        // POST: My/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("QrCodeId")] QrCode qrCode)
+        public async Task<IActionResult> Edit(int id, [Bind("ArticleId,Title,Content")] Article article)
         {
-            if (id != qrCode.QrCodeId)
+            if (id != article.ArticleId)
             {
                 return NotFound();
             }
@@ -98,12 +96,12 @@ namespace QRCodeMain.Controllers
             {
                 try
                 {
-                    _context.Update(qrCode);
+                    _context.Update(article);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!QrCodeExists(qrCode.QrCodeId))
+                    if (!ArticleExists(article.ArticleId))
                     {
                         return NotFound();
                     }
@@ -114,10 +112,10 @@ namespace QRCodeMain.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(qrCode);
+            return View(article);
         }
 
-        // GET: QrCode/Delete/5
+        // GET: My/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,30 +123,30 @@ namespace QRCodeMain.Controllers
                 return NotFound();
             }
 
-            var qrCode = await _context.QrCode
-                .SingleOrDefaultAsync(m => m.QrCodeId == id);
-            if (qrCode == null)
+            var article = await _context.Articles
+                .SingleOrDefaultAsync(m => m.ArticleId == id);
+            if (article == null)
             {
                 return NotFound();
             }
 
-            return View(qrCode);
+            return View(article);
         }
 
-        // POST: QrCode/Delete/5
+        // POST: My/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var qrCode = await _context.QrCode.SingleOrDefaultAsync(m => m.QrCodeId == id);
-            _context.QrCode.Remove(qrCode);
+            var article = await _context.Articles.SingleOrDefaultAsync(m => m.ArticleId == id);
+            _context.Articles.Remove(article);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool QrCodeExists(int id)
+        private bool ArticleExists(int id)
         {
-            return _context.QrCode.Any(e => e.QrCodeId == id);
+            return _context.Articles.Any(e => e.ArticleId == id);
         }
     }
 }

@@ -12,12 +12,23 @@
 <table class="table">
     <thead>
         <tr>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.QrCodeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QrCodeRelativePath)
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.QrCodeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QrCodeRelativePath)
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.QrCodeId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.QrCodeId">Details</a> |
