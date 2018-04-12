@@ -10,9 +10,10 @@ using System;
 namespace QRCodeMain.Migrations
 {
     [DbContext(typeof(MvcQrCodeContext))]
-    partial class MvcQrCodeContextModelSnapshot : ModelSnapshot
+    [Migration("20180412021544_initial5")]
+    partial class initial5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,22 +38,6 @@ namespace QRCodeMain.Migrations
                         .IsUnique();
 
                     b.ToTable("Articles");
-                });
-
-            modelBuilder.Entity("QRCodeMain.Models.Category", b =>
-                {
-                    b.Property<int>("CategoryId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("ArticleId");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("CategoryId");
-
-                    b.HasIndex("ArticleId");
-
-                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("QRCodeMain.Models.Comment", b =>
@@ -83,22 +68,6 @@ namespace QRCodeMain.Migrations
                     b.ToTable("QrCode");
                 });
 
-            modelBuilder.Entity("QRCodeMain.Models.UserTag", b =>
-                {
-                    b.Property<int>("UserTagId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("ArticleId");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("UserTagId");
-
-                    b.HasIndex("ArticleId");
-
-                    b.ToTable("UserTags");
-                });
-
             modelBuilder.Entity("QRCodeMain.Models.Article", b =>
                 {
                     b.HasOne("QRCodeMain.Models.QrCode", "QrCode")
@@ -107,24 +76,10 @@ namespace QRCodeMain.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("QRCodeMain.Models.Category", b =>
-                {
-                    b.HasOne("QRCodeMain.Models.Article")
-                        .WithMany("Categories")
-                        .HasForeignKey("ArticleId");
-                });
-
             modelBuilder.Entity("QRCodeMain.Models.Comment", b =>
                 {
                     b.HasOne("QRCodeMain.Models.Article")
                         .WithMany("Comments")
-                        .HasForeignKey("ArticleId");
-                });
-
-            modelBuilder.Entity("QRCodeMain.Models.UserTag", b =>
-                {
-                    b.HasOne("QRCodeMain.Models.Article")
-                        .WithMany("UserTags")
                         .HasForeignKey("ArticleId");
                 });
 #pragma warning restore 612, 618

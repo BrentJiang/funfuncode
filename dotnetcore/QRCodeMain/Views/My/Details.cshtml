@@ -1,4 +1,4 @@
-﻿@model QRCodeMain.Models.Article
+﻿@model QRCodeMain.Models.MyViewModels.ArticleViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,20 +11,37 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.Article.Title)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.Article.Title)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Content)
+            @Html.DisplayNameFor(model => model.Article.Content)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Content)
+            @Html.DisplayFor(model => model.Article.Content)
+        </dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt></dt>
+        <dd>
+            @foreach (var category in Model.Article.Categories)
+            {
+            <a asp-action="DetachCategory" asp-route-categoryId="@category.CategoryId" asp-route-articleId="@Model.Article.ArticleId">@category.Title</a>
+            }
+            @foreach (var category in Model.SystemCategories)
+            {
+                if (Model.Article.Categories.Exists(p => p.CategoryId == category.CategoryId))
+                {
+                    continue;
+                }
+                <a asp-action="AttachCategory" asp-route-categoryId="@category.CategoryId" asp-route-articleId="@Model.Article.ArticleId">@category.Title</a>
+            }
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ArticleId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Article.ArticleId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

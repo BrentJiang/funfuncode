@@ -1,4 +1,4 @@
-﻿@model IEnumerable<QRCodeMain.Models.Article>
+﻿@model QRCodeMain.Models.MyViewModels.MyHomeViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -22,7 +22,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Articles) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)

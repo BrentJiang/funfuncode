@@ -1,0 +1,17 @@
+﻿@model QRCodeMain.Models.MyViewModels.UpdateCategoryViewModel
+
+@{
+    ViewData["Title"] = "Attach";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to attach category: @Model.Category.Title to @Model.Article.Title </h3>
+<div>    
+    <form asp-route-returnurl="@ViewData["ReturnUrl"]" asp-action="AttachCategory">
+        <input type="hidden" asp-for="Category.CategoryId" />
+        <input type="hidden" asp-for="Article.ArticleId" />
+        <input type="submit" value="Attach" class="btn btn-default" /> |
+        <a asp-action="Details">Back to Article</a>
+    </form>
+</div>
