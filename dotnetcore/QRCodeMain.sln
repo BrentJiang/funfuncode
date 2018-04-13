@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QRCodeMain", "QRCodeMain\QRCodeMain.csproj", "{7F890A31-736B-4C2D-81D4-3D7CD469FB5D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordAnalyser", "WordAnalyser\WordAnalyser.csproj", "{DCA6FD0F-5684-4705-936B-763C4ACE76B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookReader", "BookReader\BookReader.csproj", "{134C0B2E-130C-41BD-A261-DA8F3E1BF368}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{7F890A31-736B-4C2D-81D4-3D7CD469FB5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F890A31-736B-4C2D-81D4-3D7CD469FB5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F890A31-736B-4C2D-81D4-3D7CD469FB5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCA6FD0F-5684-4705-936B-763C4ACE76B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCA6FD0F-5684-4705-936B-763C4ACE76B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCA6FD0F-5684-4705-936B-763C4ACE76B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCA6FD0F-5684-4705-936B-763C4ACE76B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{134C0B2E-130C-41BD-A261-DA8F3E1BF368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{134C0B2E-130C-41BD-A261-DA8F3E1BF368}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{134C0B2E-130C-41BD-A261-DA8F3E1BF368}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{134C0B2E-130C-41BD-A261-DA8F3E1BF368}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

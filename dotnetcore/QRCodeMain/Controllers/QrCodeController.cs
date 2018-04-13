@@ -21,7 +21,7 @@ namespace QRCodeMain.Controllers
         // GET: QrCode
         public async Task<IActionResult> Index()
         {
-            return View(await _context.QrCode.ToListAsync());
+            return View(await _context.QrCodes.ToListAsync());
         }
 
         // GET: QrCode/Details/5
@@ -32,7 +32,7 @@ namespace QRCodeMain.Controllers
                 return NotFound();
             }
 
-            var qrCode = await _context.QrCode
+            var qrCode = await _context.QrCodes
                 .SingleOrDefaultAsync(m => m.QrCodeId == id);
             if (qrCode == null)
             {
@@ -74,7 +74,7 @@ namespace QRCodeMain.Controllers
                 return NotFound();
             }
 
-            var qrCode = await _context.QrCode.SingleOrDefaultAsync(m => m.QrCodeId == id);
+            var qrCode = await _context.QrCodes.SingleOrDefaultAsync(m => m.QrCodeId == id);
             if (qrCode == null)
             {
                 return NotFound();
@@ -125,7 +125,7 @@ namespace QRCodeMain.Controllers
                 return NotFound();
             }
 
-            var qrCode = await _context.QrCode
+            var qrCode = await _context.QrCodes
                 .SingleOrDefaultAsync(m => m.QrCodeId == id);
             if (qrCode == null)
             {
@@ -140,15 +140,15 @@ namespace QRCodeMain.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var qrCode = await _context.QrCode.SingleOrDefaultAsync(m => m.QrCodeId == id);
-            _context.QrCode.Remove(qrCode);
+            var qrCode = await _context.QrCodes.SingleOrDefaultAsync(m => m.QrCodeId == id);
+            _context.QrCodes.Remove(qrCode);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool QrCodeExists(int id)
         {
-            return _context.QrCode.Any(e => e.QrCodeId == id);
+            return _context.QrCodes.Any(e => e.QrCodeId == id);
         }
     }
 }

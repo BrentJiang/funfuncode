@@ -18,7 +18,5 @@ namespace QRCodeMain.Models
             : base(options)
         {
         }
-
-        public DbSet<QRCodeMain.Models.QrCode> QrCode { get; set; }
     }
 }
