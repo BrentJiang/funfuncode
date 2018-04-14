@@ -13,13 +13,23 @@ namespace BookReader
         public DbSet<BookResult> BookResults { get; set; }
         public DbSet<Word> Words { get; set; }
         public DbSet<WordResult> WordResults { get; set; }
+        public DbSet<BookException> BookExceptions { get; set; }
         public DbSet<WordResultHistory> WordResultHistories { get; set; }
+        public DbSet<WordStatistics> WordStatisticses { get; set; }
 
         public BookContext(DbContextOptions<BookContext> options)
             : base(options)
         {
         }
-
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Book>()
+                .HasIndex(b => b.TopIndexWords).IsUnique(true);
+            modelBuilder.Entity<BookResult>()
+                .HasIndex(b => b.Top1020).IsUnique(false);
+            modelBuilder.Entity<WordStatistics>()
+                .HasIndex(b => b.WordUnicode).IsUnique(true);
+        }
     }
 
 

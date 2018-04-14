@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
@@ -18,35 +19,25 @@ namespace BookReader
         private double TotalTime = 0;
         private int TotalBook = 0;
         private Int64 TotalWords = 0;
-        public void ReadTxtFile(string filePathName, Language language, BookContext context, int? bookId)
+        public void ReadTxtFile(string filePathName, Language language, BookContext context)
         {
             var sw = new Stopwatch();
-            Book book = null;
 
-            if (bookId == null)
-            {
-                var fi = new FileInfo(filePathName);
-                if (fi.Extension != ".txt")
-                    return;
-                book = new Book
-                {
-                    Language = language,
-                    LanguageId = language.LanguageId,
-                    BookName = fi.Name.Replace(".txt", ""),
-                    LastDateTime = DateTime.UtcNow,
-                    BookInfo = $"read from {filePathName}"
-                };
-                context.Add(book);
-                context.SaveChanges();
-            }
+            var fi = new FileInfo(filePathName);
+            if (fi.Extension != ".txt")
+                return;
 
             sw.Start();
             var lines = File.ReadLines(filePathName);
             var cntdict = new Dictionary<char, int>();
             int wc = 0;
             int tc = 0;
+            int linenum = 0;
             foreach (var line in lines)
             {
+                ++linenum;
+                if (linenum < 3) // todo: this is temp for downloaded book
+                    continue;
                 var cline = GetLetters(line, language);
                 foreach (var letter in cline)
                 {
@@ -63,44 +54,105 @@ namespace BookReader
                 }
             }
 
-            var br = new BookResult()
+            if (wc < 50)
             {
-                Book = book,
-                BookId = book.BookId,
-                Language = language,
-                ResultDateTime = DateTime.UtcNow,
-                WordCount = wc,
-                TotalCount = tc
-            };
-            context.BookResults.Add(br);
-            foreach (var i in cntdict)
-            {
-                context.WordResults.Add(new WordResult()
-                {
-                    Book = book,
-                    BookId = book.BookId,
-                    WordCount = i.Value,
-                    WordLetter = i.Key.ToString(),
-                    WordUnicode = i.Key
-                });
+                Console.WriteLine(
+                    $"{TotalBook}: Parse total words: {tc}, different words: {wc}, less than 50!!!!! {fi.Name.Replace(".txt", "")}");
+                return;
             }
+            List<KeyValuePair<char, int>> myList = cntdict.ToList();
+            myList.Sort(
+                (pair1, pair2) => pair2.Value.CompareTo(pair1.Value)
+            );
+            var top1020 = string.Join("", myList.Skip(10).Take(10).Select(p => p.Key).ToArray());
+            bool findbook = true;
+
             try
             {
+                var book = context.Books.SingleOrDefault(p => p.TopIndexWords == top1020);
+                if (book == null)
+                {
+                    findbook = false;
+                    book = new Book
+                    {
+                        Language = language,
+                        LanguageId = language.LanguageId,
+                        BookName = fi.Name.Replace(".txt", ""),
+                        LastDateTime = DateTime.UtcNow,
+                        BookInfo = $"read from {filePathName}"
+                    };
+                }
+                var br = new BookResult
+                {
+                    Book = book,
+                    BookId = findbook ? book.BookId : 0,
+                    Language = language,
+                    ResultDateTime = DateTime.UtcNow,
+                    WordCount = wc,
+                    TotalCount = tc,
+                    Top10 = string.Join("", myList.Take(10).Select(p => p.Key).ToArray()),
+                    Top1020 = top1020,
+                    Top50 = string.Join("", myList.Take(50).Select(p => p.Key).ToArray())
+                };
+                book.PrevWordCount = book.LastWordCount;
+                book.PrevTotalCount = book.LastTotalCount;
+                book.LastWordCount = wc;
+                book.LastTotalCount = tc;
+                if (findbook) context.Update(book);
+                else
+                {
+                    book.TopIndexWords = br.Top1020;
+                    context.Add(book);
+                }
+                context.Add(br);
+                foreach (var dic in cntdict)
+                {
+                    context.Add(new WordResult
+                    {
+                        Book = book,
+                        BookId = findbook ? book.BookId : 0,
+                        WordCount = dic.Value,
+                        WordLetter = dic.Key.ToString(),
+                        WordUnicode = dic.Key
+                    });
+                    var wordsta = context.WordStatisticses.SingleOrDefault(p => p.WordUnicode == dic.Key.ToString());
+                    if (wordsta == null)
+                    {
+                        wordsta = new WordStatistics
+                        {
+                            WordUnicode = dic.Key.ToString(),
+                            TotalBook = 1,
+                            TotalWords = wc,
+                            TotalOccur = dic.Value,
+                            MaxRatio = (double)dic.Value / (double)wc,
+                            MaxWords = wc,
+                            MaxOccur = dic.Value
+                        };
+                        context.Add(wordsta);
+                    }
+                    else
+                    {
+                        wordsta.TotalBook += 1;
+                        wordsta.MaxOccur = Math.Max(wordsta.MaxOccur, dic.Value);
+                        wordsta.MaxWords = Math.Max(wordsta.MaxWords, wc);
+                        wordsta.MaxRatio = Math.Max(wordsta.MaxRatio, (double)dic.Value / (double)wc);
+                        wordsta.TotalOccur += dic.Value;
+                        wordsta.TotalWords += wc;
+                        //if (findbook) todo 这里的计算有误！
+                        //{
+                        //    wordsta.TotalOccur -= ?? not book.PrevWordCount;
+                        //    wordsta.TotalWords -= ?? not book.PrevTotalCount;
+                        //}
+                        context.Update(wordsta);
+                    }
+                }
                 context.SaveChanges();
                 sw.Stop();
                 ++TotalBook;
                 TotalWords += wc;
                 TotalTime += sw.ElapsedMilliseconds;
                 Console.WriteLine(
-                    $"Parse finished, total words: {tc}, different words: {wc}, average elapsed milliseconds: {(double) TotalTime / (double) TotalBook}, average words: {(double) TotalWords / (double) TotalBook}");
-                List<KeyValuePair<char, int>> myList = cntdict.ToList();
-                myList.Sort(
-                    delegate (KeyValuePair<char, int> pair1,
-                        KeyValuePair<char, int> pair2)
-                    {
-                        return pair2.Value.CompareTo(pair1.Value);
-                    }
-                );
+                    $"{TotalBook}: Parse finished, total words: {tc}, different words: {wc}, average elapsed milliseconds: {(double) TotalTime / (double) TotalBook}, average words: {(double) TotalWords / (double) TotalBook}. {book.BookName}");
                 int i = 0;
                 foreach (var count in myList)
                 {
@@ -111,7 +163,15 @@ namespace BookReader
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                context = Program.GetBookContext();
+                context.Add(new BookException
+                {
+                    Top1020 = top1020,
+                    ErrorMsg = e.ToString(),
+                    BookInfo = fi.FullName
+                });
+                context.SaveChanges();
+                Console.WriteLine($"{TotalBook}: Parse failed: {e}");
             }
         }
 
@@ -143,15 +203,7 @@ namespace BookReader
             // <program> <file> <language>
             if (args.Length != 2)
                 return;
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
-            IConfigurationRoot configuration = builder.Build();
-
-            // Get the connection string
-            string connectionString = configuration.GetConnectionString("BookContext");
-            BookContext gContext = BookContextFactory.Create(connectionString);
+            BookContext gContext = GetBookContext();
             var lang = gContext.Languages.SingleOrDefault(p => p.LanguageCode == args[1]);
             if (lang == null)
             {
@@ -161,7 +213,7 @@ namespace BookReader
                     LanguageCode = "zh_CN",
                     LanguageType = 1
                 };
-                gContext.Languages.Add(lang);
+                gContext.Add(lang);
                 gContext.SaveChanges();
             }
 
@@ -182,9 +234,23 @@ namespace BookReader
             });
             DirSearch(args[0], s =>
             {
-                parser.ReadTxtFile(s, lang, gContext, null);
+                parser.ReadTxtFile(s, lang, gContext);
             });
         }
+
+        public static BookContext GetBookContext()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+            IConfigurationRoot configuration = builder.Build();
+
+            // Get the connection string
+            string connectionString = configuration.GetConnectionString("BookContext");
+            return BookContextFactory.Create(connectionString);
+        }
+
         private static void UnRar(string filepath)
         {
             var fi = new FileInfo(filepath);

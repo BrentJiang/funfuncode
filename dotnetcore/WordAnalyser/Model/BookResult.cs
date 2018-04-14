@@ -27,5 +27,8 @@ namespace WordAnalyser.Model
         /// 处理分析器信息，例如词库信息等。
         /// </summary>
         public string ParserInfo { get; set; }
+        public string Top10 { get; set; }
+        public string Top1020 { get; set; }
+        public string Top50 { get; set; }
     }
 }
