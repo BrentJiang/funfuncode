@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VocabularyAnalyser\VocabularyAnalyser.csproj" />
     <ProjectReference Include="..\WordAnalyser\WordAnalyser.csproj" />
   </ItemGroup>
 

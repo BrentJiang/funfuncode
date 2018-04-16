@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using VocabularyAnalyser.Model;
 
 namespace QRCodeMain.Models
 {
@@ -13,6 +14,8 @@ namespace QRCodeMain.Models
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<UserTag> UserTags { get; set; }
+        public DbSet<VocabularyTest> VocabularyTests { get; set; }
+        public DbSet<VocabularyTestDetail> VocabularyTestDetails { get; set; }
 
         public MvcQrCodeContext (DbContextOptions<MvcQrCodeContext> options)
             : base(options)

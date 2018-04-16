@@ -290,3 +290,5 @@ __pycache__/
 /dotnetcore/app.db
 /dotnetcore/book.db
 /dotnetcore/code.db
+/dotnetcore/book.db-journal
+/dotnetcore/*.db
