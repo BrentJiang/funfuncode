@@ -1,0 +1,23 @@
+﻿@model QRCodeMain.Models.MyStatisticsViewModels.TestResultViewModel
+
+@{
+    ViewData["Title"] = "Vocabulary Test Result";
+}
+
+<h2>Vocabulary Test Result</h2>
+
+<div>
+    @for (var i = 0; i < Model.Test.VocabularyTestDetails.Count; i++)
+    {
+        var item = Model.Test.VocabularyTestDetails[i];
+        <ul>
+            <li><p>A: <p>@item.AnswerContentA</p></li>
+            <li><p>B: <p>@item.AnswerContentB</p></li>
+            <li><p>C: <p>@item.AnswerContentC</p></li>
+            <li><p>D: <p>@item.AnswerContentD</p></li>
+            <li><p>You choose: </p><p>@item.FinalAnswer</p></li>
+            <li><p>Correct answer:</p><p>@item.CorrectAnswer</p></li>
+        </ul>
+        <br />
+    }
+</div>

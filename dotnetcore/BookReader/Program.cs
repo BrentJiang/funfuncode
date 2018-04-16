@@ -207,32 +207,38 @@ namespace BookReader
     class Program
     {
         /// <summary>
+        /// 将文本数据读取到系统中。
         /// https://carlos.mendible.com/2016/07/11/step-by-step-dotnet-core-and-entity-framework-core/
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            // <program> <file> <language>
-            var datapath = @"E:\xiabook";
+            // <program> <dir> <language>
+            if (args.Length != 3)
+            {
+                Console.WriteLine("Usage: <program> <dir(\"E:\\xiabook\")> <language(zh_CN|en_US)> <category(MordernChineseMasterwork|MordernEnglishMasterwork|AcientChineseMasterbook|MordernChineseChildren|...)>");
+                return;
+            }
+            var datapath = args[0];//@"E:\xiabook";
             BookContext gContext = GetBookContext();
-            var lang = gContext.Languages.SingleOrDefault(p => p.LanguageCode == "zh_CN");
+            var lang = gContext.Languages.SingleOrDefault(p => p.LanguageCode == args[1]);
             if (lang == null)
             {
                 lang = new Language
                 {
-                    LanguageName = "简体中文",
-                    LanguageCode = "zh_CN",
-                    LanguageType = 1
+                    LanguageName = args[1],
+                    LanguageCode = args[1],
+                    LanguageType = gContext.Languages.Max(p => p.LanguageType) + 1
                 };
                 gContext.Add(lang);
                 gContext.SaveChanges();
             }
-            var cate = gContext.BookCategories.SingleOrDefault(p => p.CategoryType == "MordernChineseMasterwork");
+            var cate = gContext.BookCategories.SingleOrDefault(p => p.CategoryType == args[2]);
             if (cate == null)
             {
                 cate = new BookCategory
                 {
-                    CategoryType = "MordernChineseMasterwork"
+                    CategoryType = args[2]
                 };
                 gContext.Add(cate);
                 gContext.SaveChanges();

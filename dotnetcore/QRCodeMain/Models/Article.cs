@@ -30,7 +30,6 @@ namespace QRCodeMain.Models
         public int CommentId { get; set; }
         public string Content { get; set; }
     }
-
     /// <summary>
     /// 系统支持的类别，每一个类别都实现了用户推荐
     /// </summary>
@@ -53,6 +52,7 @@ namespace QRCodeMain.Models
     {
         public int WordStatisticsId { get; set; }
         public string WordUnicode { get; set; }
+        public string WordDescription { get; set; }
         /// <summary>
         /// 出现过该文字的书籍数量
         /// </summary>

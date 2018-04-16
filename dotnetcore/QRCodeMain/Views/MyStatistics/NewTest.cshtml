@@ -1,0 +1,24 @@
+﻿@model QRCodeMain.Models.MyStatisticsViewModels.NewTestViewModel
+
+@{
+    ViewData["Title"] = "Vocabulary Test";
+}
+
+<h2>Vocabulary Test</h2>
+
+<form asp-action="SubmitTest" asp-controller="MyStatistics" method="get">
+    @for (var i = 0; i < Model.Test.VocabularyTestDetails.Count; i++)
+    {
+        var item = Model.Test.VocabularyTestDetails[i];
+        <h3>No.@(i+1): @item.WordUnicode</h3>
+        <ul>
+            <li><p>A: @item.AnswerContentA</p></li>
+            <li><p>B: @item.AnswerContentB</p></li>
+            <li><p>C: @item.AnswerContentC</p></li>
+            <li><p>D: @item.AnswerContentD</p></li>
+        </ul>
+        <p>You choose: <input type="text" id="@item.WordUnicode" asp-for="@item.FinalAnswer" value="@item.FinalAnswer" /></p>
+        <br />
+    }
+    <button type="submit" name="action">Submit</button>
+</form>

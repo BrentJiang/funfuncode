@@ -11,9 +11,10 @@ using System;
 namespace QRCodeMain.Migrations
 {
     [DbContext(typeof(MvcQrCodeContext))]
-    partial class MvcQrCodeContextModelSnapshot : ModelSnapshot
+    [Migration("20180416161505_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
