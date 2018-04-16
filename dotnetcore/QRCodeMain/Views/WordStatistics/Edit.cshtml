@@ -1,0 +1,64 @@
+﻿@model WordStatistics
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>WordStatistics</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="WordStatisticsId" />
+            <div class="form-group">
+                <label asp-for="WordUnicode" class="control-label"></label>
+                <input asp-for="WordUnicode" class="form-control" />
+                <span asp-validation-for="WordUnicode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalBook" class="control-label"></label>
+                <input asp-for="TotalBook" class="form-control" />
+                <span asp-validation-for="TotalBook" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalWords" class="control-label"></label>
+                <input asp-for="TotalWords" class="form-control" />
+                <span asp-validation-for="TotalWords" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalOccur" class="control-label"></label>
+                <input asp-for="TotalOccur" class="form-control" />
+                <span asp-validation-for="TotalOccur" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxWords" class="control-label"></label>
+                <input asp-for="MaxWords" class="form-control" />
+                <span asp-validation-for="MaxWords" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxOccur" class="control-label"></label>
+                <input asp-for="MaxOccur" class="form-control" />
+                <span asp-validation-for="MaxOccur" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxRatio" class="control-label"></label>
+                <input asp-for="MaxRatio" class="form-control" />
+                <span asp-validation-for="MaxRatio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

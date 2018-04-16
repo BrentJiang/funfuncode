@@ -1,0 +1,71 @@
+﻿@model IEnumerable<WordStatistics>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.WordUnicode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalBook)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalWords)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalOccur)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MaxWords)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MaxOccur)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MaxRatio)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.WordUnicode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalBook)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalWords)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalOccur)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxWords)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxOccur)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxRatio)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.WordStatisticsId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.WordStatisticsId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.WordStatisticsId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

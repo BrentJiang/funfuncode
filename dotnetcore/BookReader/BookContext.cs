@@ -9,6 +9,7 @@ namespace BookReader
     public class BookContext : DbContext
     {
         public DbSet<Language> Languages { get; set; }
+        public DbSet<BookCategory> BookCategories { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<BookResult> BookResults { get; set; }
         public DbSet<Word> Words { get; set; }
@@ -29,6 +30,8 @@ namespace BookReader
                 .HasIndex(b => b.Top1020).IsUnique(false);
             modelBuilder.Entity<WordStatistics>()
                 .HasIndex(b => b.WordUnicode).IsUnique(true);
+            modelBuilder.Entity<BookCategory>()
+                .HasIndex(b => b.CategoryType).IsUnique(true);
         }
     }
 

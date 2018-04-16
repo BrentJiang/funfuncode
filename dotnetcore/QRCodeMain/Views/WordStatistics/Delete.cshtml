@@ -1,0 +1,63 @@
+﻿@model WordStatistics
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>WordStatistics</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.WordUnicode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WordUnicode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalBook)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TotalBook)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalWords)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TotalWords)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalOccur)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TotalOccur)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MaxWords)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MaxWords)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MaxOccur)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MaxOccur)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MaxRatio)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MaxRatio)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="WordStatisticsId" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

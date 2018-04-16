@@ -80,7 +80,7 @@ namespace QRCodeMain.Migrations
 
                     b.HasKey("QrCodeId");
 
-                    b.ToTable("QrCode");
+                    b.ToTable("QrCodes");
                 });
 
             modelBuilder.Entity("QRCodeMain.Models.UserTag", b =>
@@ -97,6 +97,33 @@ namespace QRCodeMain.Migrations
                     b.HasIndex("ArticleId");
 
                     b.ToTable("UserTags");
+                });
+
+            modelBuilder.Entity("QRCodeMain.Models.WordStatistics", b =>
+                {
+                    b.Property<int>("WordStatisticsId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("MaxOccur");
+
+                    b.Property<double>("MaxRatio");
+
+                    b.Property<int>("MaxWords");
+
+                    b.Property<int>("TotalBook");
+
+                    b.Property<int>("TotalOccur");
+
+                    b.Property<int>("TotalWords");
+
+                    b.Property<string>("WordUnicode");
+
+                    b.HasKey("WordStatisticsId");
+
+                    b.HasIndex("WordUnicode")
+                        .IsUnique();
+
+                    b.ToTable("WordStatisticses");
                 });
 
             modelBuilder.Entity("QRCodeMain.Models.Article", b =>

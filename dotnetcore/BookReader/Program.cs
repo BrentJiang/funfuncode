@@ -12,14 +12,16 @@ using WordAnalyser.Model;
 namespace BookReader
 {
     /// <summary>
-    /// 仅从目前有的字库中进行统计
+    /// - 仅从目前有的字库中进行统计.
+    /// - 使用Top1020 作为图书ID，同时保存前5行单词作为书籍简介，这样可以留待进一步人工
+    /// 完善书籍基础信息、勘误。
     /// </summary>
     class Parser
     {
         private double TotalTime = 0;
         private int TotalBook = 0;
         private Int64 TotalWords = 0;
-        public void ReadTxtFile(string filePathName, Language language, BookContext context)
+        public void ReadTxtFile(string filePathName, Language language, BookCategory category, BookContext context)
         {
             var sw = new Stopwatch();
 
@@ -70,6 +72,11 @@ namespace BookReader
             try
             {
                 var book = context.Books.SingleOrDefault(p => p.TopIndexWords == top1020);
+                if(book != null)
+                {
+                    Console.WriteLine($"Already exists: {fi.Name}");
+                    return;
+                }
                 if (book == null)
                 {
                     findbook = false;
@@ -77,9 +84,11 @@ namespace BookReader
                     {
                         Language = language,
                         LanguageId = language.LanguageId,
+                        BookCategory = category,
+                        BookCategoryId = category.BookCategoryId,
                         BookName = fi.Name.Replace(".txt", ""),
                         LastDateTime = DateTime.UtcNow,
-                        BookInfo = $"read from {filePathName}"
+                        BookInfo = string.Join('\n', lines.Skip(2).Take(5))
                     };
                 }
                 var br = new BookResult
@@ -105,6 +114,9 @@ namespace BookReader
                     context.Add(book);
                 }
                 context.Add(br);
+                // todo 2018年4月14日 利用缓存加快了10倍速度（比直接使用context.WordStatisticses.SingleOrDefault），
+                // 但是带来了多个程序同时访问数据库带来的数据不一致问题。
+                var wordsrepo = context.WordStatisticses.ToDictionary(p => p.WordUnicode, p => p);
                 foreach (var dic in cntdict)
                 {
                     context.Add(new WordResult
@@ -115,7 +127,7 @@ namespace BookReader
                         WordLetter = dic.Key.ToString(),
                         WordUnicode = dic.Key
                     });
-                    var wordsta = context.WordStatisticses.SingleOrDefault(p => p.WordUnicode == dic.Key.ToString());
+                    var wordsta = wordsrepo.FirstOrDefault(p => p.Key == dic.Key.ToString()).Value;
                     if (wordsta == null)
                     {
                         wordsta = new WordStatistics
@@ -201,13 +213,12 @@ namespace BookReader
         static void Main(string[] args)
         {
             // <program> <file> <language>
-            if (args.Length != 2)
-                return;
+            var datapath = @"E:\xiabook";
             BookContext gContext = GetBookContext();
-            var lang = gContext.Languages.SingleOrDefault(p => p.LanguageCode == args[1]);
+            var lang = gContext.Languages.SingleOrDefault(p => p.LanguageCode == "zh_CN");
             if (lang == null)
             {
-                lang = new Language()
+                lang = new Language
                 {
                     LanguageName = "简体中文",
                     LanguageCode = "zh_CN",
@@ -216,25 +227,35 @@ namespace BookReader
                 gContext.Add(lang);
                 gContext.SaveChanges();
             }
+            var cate = gContext.BookCategories.SingleOrDefault(p => p.CategoryType == "MordernChineseMasterwork");
+            if (cate == null)
+            {
+                cate = new BookCategory
+                {
+                    CategoryType = "MordernChineseMasterwork"
+                };
+                gContext.Add(cate);
+                gContext.SaveChanges();
+            }
 
 
             var parser = new Parser();
-            DirSearch(args[0], s =>
+            DirSearch(datapath, s =>
             {
                 if (s.EndsWith("rar"))
                 {
                     UnRar(s);
                 }
             });
-            DirSearch(args[0], s =>
+            //DirSearch(datapath, s =>
+            //{
+            //    FileInfo fi = new FileInfo(s);
+            //    var newname = fi.FullName.Replace("_下书网www.xiabook.com", "");
+            //    File.Move(s, newname);
+            //});
+            DirSearch(datapath, s =>
             {
-                FileInfo fi = new FileInfo(s);
-                var newname = fi.FullName.Replace("_下书网www.xiabook.com", "");
-                File.Move(s, newname);
-            });
-            DirSearch(args[0], s =>
-            {
-                parser.ReadTxtFile(s, lang, gContext);
+                parser.ReadTxtFile(s, lang, cate, gContext);
             });
         }
 

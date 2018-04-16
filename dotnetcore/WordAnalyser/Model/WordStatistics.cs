@@ -32,5 +32,12 @@ namespace WordAnalyser.Model
         /// 出现过该文字次数做多的一本书里面该文字的出现比率
         /// </summary>
         public double MaxRatio { get; set; }
+
+        /// <summary>
+        /// 2018年4月15日 增加文字统计中的书籍分类信息。这样如果单纯的表格数据迁移时，
+        /// 可以根据图书分类进行。
+        /// </summary>
+        public int BookCategoryId { get; set; }
+        public virtual BookCategory BookCategory { get; set; }
     }
 }

@@ -1,0 +1,60 @@
+﻿@model WordStatistics
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>WordStatistics</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.WordUnicode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WordUnicode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalBook)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TotalBook)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalWords)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TotalWords)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalOccur)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TotalOccur)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MaxWords)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MaxWords)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MaxOccur)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MaxOccur)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MaxRatio)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MaxRatio)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.WordStatisticsId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

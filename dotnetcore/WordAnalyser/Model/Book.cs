@@ -24,5 +24,7 @@ namespace WordAnalyser.Model
         public string TopIndexWords { get; set; }
         public int LastTotalCount { get; set; }
         public int PrevTotalCount { get; set; }
+        public int BookCategoryId { get; set; }
+        public virtual BookCategory BookCategory { get; set; }
     }
 }
