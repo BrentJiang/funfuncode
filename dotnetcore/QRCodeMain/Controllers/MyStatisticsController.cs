@@ -76,13 +76,15 @@ namespace QRCodeMain.Controllers
                 Test = new VocabularyAnalyser.Model.MyVocabularyTest
                 {
                     UserName = user.UserName,
-                    TestWordCount = 20,
+                    TestWordCount = 25,
                     TestTime = DateTime.UtcNow,
                     Language = language,
                     LanguageId = language.LanguageId
                 }
             };
             vm.Test.VocabularyTestDetails = await GenerateTestDetailsAsync(vm.Test, new List<(int, int, int)> { (0, 3000, 15), (3001, 5000, 5), (5001, 10000, 5) });
+            _context.Add(vm.Test);
+            await _context.SaveChangesAsync();
             return View(vm);
         }
 
@@ -121,22 +123,27 @@ namespace QRCodeMain.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitTest(NewTestViewModel model)
+        public async Task<IActionResult> SubmitTest(int id, IEnumerable<VocabularyTestDetail> answers)
         {
             if (ModelState.IsValid)
             {
                 var testvm = new TestResultViewModel
                 {
-                    Test = Judge(model.Test)
+                    Test = await Judge(id, answers)
                 };
                 return View(testvm);
             }
             return NotFound();
         }
 
-        private MyVocabularyTest Judge(MyVocabularyTest test)
+        private async Task<MyVocabularyTest> Judge(int id, IEnumerable<VocabularyTestDetail> answers)
         {
-            return test;
+            var model = await _context.MyVocabularyTests.Include(p => p.Language).SingleOrDefaultAsync(p => p.MyVocabularyTestId == id);
+            model.Score = answers.Count(p=> p.CorrectAnswer == p.FinalAnswer) * (100.0f/(double)model.TestWordCount);
+            model.TestTime = DateTime.UtcNow;
+            _context.Update(model);
+            await _context.SaveChangesAsync();
+            return model;
         }
 
         // GET: WordStatistics
