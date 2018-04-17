@@ -208,8 +208,10 @@ namespace BookReader
             else //if (language.LanguageCode == "en_US")
             {
                 Regex rgx = new Regex("[^a-zA-Z -]");
-                // 都用小写字符
-                line = rgx.Replace(line, "").ToLower(); // only trim '-' postfix or prefix
+                // 都用小写字符// 不能直接把“—”放进第一个regex
+                line = rgx.Replace(line, " ").ToLower(); // only trim '-' postfix or prefix
+
+                line = line.Replace("--", " ").Replace("—", " ");
                 // 避免有些符号黏在单词上
                 // new char[]{' ', ',', '.', '\'', ';','\"', '’', '‘','?','!' }
                 lst.AddRange(line.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries).Where(t => t.Length > 1)

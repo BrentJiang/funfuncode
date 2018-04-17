@@ -41,7 +41,10 @@ namespace PdfToTxtClassic
                     return;
 
                 Console.WriteLine("\n" + filename);
-                pdfParser.ExtractText(filename, filename + ".txt");
+                if (!File.Exists(filename + ".txt"))
+                {
+                    pdfParser.ExtractText(filename, filename + ".txt");
+                }
 
                 // parse papers
                 List<string> results = new List<string>();
@@ -58,20 +61,26 @@ namespace PdfToTxtClassic
                     if (line.EndsWith("-"))
                     {
                         line = line.Substring(0, line.Length - 1);
+                        needremoveminus = true;
+                    }
+                    else
+                    {
+                        line += " ";
                     }
 
                     if ((!string.IsNullOrEmpty(prevline) && !char.IsLetter(prevline.Last()))
                         || char.IsUpper(line.TrimStart()[0]))
                     {
                         if (prevline.Length > 0)
+                        {
                             results.Add(prevline);
+                        }
+
                         prevline = line;
-                        needremoveminus = false;
                     }
                     else
                     {
                         prevline += line;
-                        needremoveminus = true;
                     }
                 }
                 if (!string.IsNullOrEmpty(prevline))
