@@ -39,5 +39,6 @@ namespace WordAnalyser.Model
         /// </summary>
         public int BookCategoryId { get; set; }
         public virtual BookCategory BookCategory { get; set; }
+        public int FirstBookId { get; set; }
     }
 }

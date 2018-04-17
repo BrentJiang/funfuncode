@@ -11,7 +11,6 @@ namespace WordAnalyser.Model
     {
         public Int64 WordResultId { get; set; }
         public string WordLetter { get; set; }
-        public int WordUnicode { get; set; }
         public int BookId { get; set; }
         public virtual Book Book { get; set; }
         public int WordCount { get; set; }

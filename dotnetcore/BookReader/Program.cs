@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using WordAnalyser.Model;
@@ -21,7 +22,7 @@ namespace BookReader
         private double TotalTime = 0;
         private int TotalBook = 0;
         private Int64 TotalWords = 0;
-        public void ReadTxtFile(string filePathName, Language language, BookCategory category, BookContext context)
+        public void ReadTxtFile(string filePathName, Language language, BookCategory category, BookContext context, int skipLines, string connectionString)
         {
             var sw = new Stopwatch();
 
@@ -31,14 +32,14 @@ namespace BookReader
 
             sw.Start();
             var lines = File.ReadLines(filePathName);
-            var cntdict = new Dictionary<char, int>();
+            var cntdict = new Dictionary<string, int>();
             int wc = 0;
             int tc = 0;
             int linenum = 0;
             foreach (var line in lines)
             {
                 ++linenum;
-                if (linenum < 3) // todo: this is temp for downloaded book
+                if (linenum <= skipLines) // todo: this is temp for downloaded book
                     continue;
                 var cline = GetLetters(line, language);
                 foreach (var letter in cline)
@@ -62,7 +63,7 @@ namespace BookReader
                     $"{TotalBook}: Parse total words: {tc}, different words: {wc}, less than 50!!!!! {fi.Name.Replace(".txt", "")}");
                 return;
             }
-            List<KeyValuePair<char, int>> myList = cntdict.ToList();
+            List<KeyValuePair<string, int>> myList = cntdict.ToList();
             myList.Sort(
                 (pair1, pair2) => pair2.Value.CompareTo(pair1.Value)
             );
@@ -75,7 +76,7 @@ namespace BookReader
                 if(book != null)
                 {
                     Console.WriteLine($"Already exists: {fi.Name}");
-                    return;
+                    //return;
                 }
                 if (book == null)
                 {
@@ -88,7 +89,7 @@ namespace BookReader
                         BookCategoryId = category.BookCategoryId,
                         BookName = fi.Name.Replace(".txt", ""),
                         LastDateTime = DateTime.UtcNow,
-                        BookInfo = string.Join('\n', lines.Skip(2).Take(5))
+                        BookInfo = string.Join('\n', lines.Skip(skipLines).Take(5))
                     };
                 }
                 var br = new BookResult
@@ -114,6 +115,7 @@ namespace BookReader
                     context.Add(book);
                 }
                 context.Add(br);
+                context.SaveChanges();
                 // todo 2018年4月14日 利用缓存加快了10倍速度（比直接使用context.WordStatisticses.SingleOrDefault），
                 // 但是带来了多个程序同时访问数据库带来的数据不一致问题。
                 var wordsrepo = context.WordStatisticses.ToDictionary(p => p.WordUnicode, p => p);
@@ -122,10 +124,9 @@ namespace BookReader
                     context.Add(new WordResult
                     {
                         Book = book,
-                        BookId = findbook ? book.BookId : 0,
+                        BookId = book.BookId,
                         WordCount = dic.Value,
-                        WordLetter = dic.Key.ToString(),
-                        WordUnicode = dic.Key
+                        WordLetter = dic.Key
                     });
                     var wordsta = wordsrepo.FirstOrDefault(p => p.Key == dic.Key.ToString()).Value;
                     if (wordsta == null)
@@ -138,7 +139,10 @@ namespace BookReader
                             TotalOccur = dic.Value,
                             MaxRatio = (double)dic.Value / (double)wc,
                             MaxWords = wc,
-                            MaxOccur = dic.Value
+                            MaxOccur = dic.Value,
+                            BookCategory = category,
+                            BookCategoryId = category.BookCategoryId,
+                            FirstBookId = book.BookId
                         };
                         context.Add(wordsta);
                     }
@@ -175,7 +179,7 @@ namespace BookReader
             }
             catch (Exception e)
             {
-                context = Program.GetBookContext();
+                context = Program.GetBookContext(connectionString);
                 context.Add(new BookException
                 {
                     Top1020 = top1020,
@@ -187,9 +191,9 @@ namespace BookReader
             }
         }
 
-        private string GetLetters(string line, Language language)
+        private List<string> GetLetters(string line, Language language)
         {
-            StringBuilder builder = new StringBuilder(line.Length);
+            var lst = new List<string>(line.Length);
             // 简体汉字
             if (language.LanguageCode == "zh_CN")
             {
@@ -197,11 +201,23 @@ namespace BookReader
                 {
                     if (c > 0x4E00 && c < 0x9FCB)
                     {
-                        builder.Append(c);
+                        lst.Add(c.ToString());
                     }
                 }
             }
-            return builder.ToString();
+            else //if (language.LanguageCode == "en_US")
+            {
+                Regex rgx = new Regex("[^a-zA-Z -]");
+                // 都用小写字符// 不能直接把“—”放进第一个regex
+                line = rgx.Replace(line, " ").ToLower(); // only trim '-' postfix or prefix
+
+                line = line.Replace("--", " ").Replace("—", " ");
+                // 避免有些符号黏在单词上
+                // new char[]{' ', ',', '.', '\'', ';','\"', '’', '‘','?','!' }
+                lst.AddRange(line.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries).Where(t => t.Length > 1)
+                    .Select(p => p.Trim('-')));
+            }
+            return lst;
         }
     }
     class Program
@@ -213,25 +229,33 @@ namespace BookReader
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            // <program> <dir> <language>
-            if (args.Length != 3)
+            if (args.Length == 2 && args[0] == "init")
             {
-                Console.WriteLine("Usage: <program> <dir(\"E:\\xiabook\")> <language(zh_CN|en_US)> <category(MordernChineseMasterwork|MordernEnglishMasterwork|AcientChineseMasterbook|MordernChineseChildren|...)>");
+                BookContext context = GetBookContext("DataSource=" + args[1]);
+                if (context != null)
+                {
+                    Console.WriteLine("success!");
+                }
+                else
+                {
+                    Console.WriteLine("Fail!");
+                }
+                return;
+            }
+            // <program> <dir> <language>
+            if (args.Length != 5)
+            {
+                Console.WriteLine("Usage-1: <program> <dir(\"E:\\xiabook\")> <language(zh_CN|en_US)> <category(MordernMasterwork|MordernMasterwork|AcientMasterbook|MordernChildrenNobel|...)> <skip-lines> <dbfile(book.db)>");
+                Console.WriteLine("Usage-2: <program> init <dbfile(book.db)>");
                 return;
             }
             var datapath = args[0];//@"E:\xiabook";
-            BookContext gContext = GetBookContext();
+            BookContext gContext = GetBookContext("DataSource=" + args[4]);
             var lang = gContext.Languages.SingleOrDefault(p => p.LanguageCode == args[1]);
             if (lang == null)
             {
-                lang = new Language
-                {
-                    LanguageName = args[1],
-                    LanguageCode = args[1],
-                    LanguageType = gContext.Languages.Max(p => p.LanguageType) + 1
-                };
-                gContext.Add(lang);
-                gContext.SaveChanges();
+                Console.WriteLine("Please init language database using LanguageInit tool.");
+                return;
             }
             var cate = gContext.BookCategories.SingleOrDefault(p => p.CategoryType == args[2]);
             if (cate == null)
@@ -261,20 +285,20 @@ namespace BookReader
             //});
             DirSearch(datapath, s =>
             {
-                parser.ReadTxtFile(s, lang, cate, gContext);
+                parser.ReadTxtFile(s, lang, cate, gContext, Convert.ToInt32(args[3]), "DataSource=" + args[4]);
             });
         }
 
-        public static BookContext GetBookContext()
+        public static BookContext GetBookContext(string connectionString)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            //var builder = new ConfigurationBuilder()
+            //    .SetBasePath(Directory.GetCurrentDirectory())
+            //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-            IConfigurationRoot configuration = builder.Build();
+            //IConfigurationRoot configuration = builder.Build();
 
-            // Get the connection string
-            string connectionString = configuration.GetConnectionString("BookContext");
+            //// Get the connection string
+            //string connectionString = configuration.GetConnectionString("BookContext");
             return BookContextFactory.Create(connectionString);
         }
 

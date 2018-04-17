@@ -86,6 +86,11 @@ namespace MigrateWordStatistics
                     insertCommand.CommandText = $"INSERT or replace into Languages ( LanguageType, LanguageCode, LanguageName )" +
                         $" VALUES ( 2, 'en_US', '美国英语'  )";
                     insertCommand.ExecuteNonQuery();
+                    insertCommand = targetconn.CreateCommand();
+                    insertCommand.Transaction = transaction;
+                    insertCommand.CommandText = $"INSERT or replace into Languages ( LanguageType, LanguageCode, LanguageName )" +
+                        $" VALUES ( 3, 'cn_BlockChain', '区块链中文'  )";
+                    insertCommand.ExecuteNonQuery();
                     transaction.Commit();
                 }
             }
