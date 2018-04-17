@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace WordAnalyser.Model
@@ -28,6 +29,7 @@ namespace WordAnalyser.Model
         /// </summary>
         public string ParserInfo { get; set; }
         public string Top10 { get; set; }
+        [StringLength(100)]
         public string Top1020 { get; set; }
         public string Top50 { get; set; }
     }

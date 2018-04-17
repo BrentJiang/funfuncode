@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace WordAnalyser.Model
@@ -20,7 +21,7 @@ namespace WordAnalyser.Model
         /// 用于快速进行多本书统计计算
         /// </summary>
         public int LastWordCount { get; set; }
-
+        [StringLength(100)]
         public string TopIndexWords { get; set; }
         public int LastTotalCount { get; set; }
         public int PrevTotalCount { get; set; }

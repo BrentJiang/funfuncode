@@ -6,6 +6,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using WordAnalyser.Model;
@@ -22,7 +24,8 @@ namespace BookReader
         private double TotalTime = 0;
         private int TotalBook = 0;
         private Int64 TotalWords = 0;
-        public void ReadTxtFile(string filePathName, Language language, BookCategory category, BookContext context, int skipLines, string connectionString)
+
+        public void ReadTxtFile(string filePathName, Language language, BookCategory category, int skipLines, string connectionString, ref Dictionary<string, WordStatistics> wordsRepo)
         {
             var sw = new Stopwatch();
 
@@ -72,8 +75,9 @@ namespace BookReader
 
             try
             {
-                var book = context.Books.SingleOrDefault(p => p.TopIndexWords == top1020);
-                if(book != null)
+                var context = Program.GetBookContext(connectionString);
+                var book = context.Books.SingleOrDefault(p => p.TopIndexWords == top1020); // Include(p => p.Language).Include(p => p.BookCategory).
+                if (book != null)
                 {
                     Console.WriteLine($"Already exists: {fi.Name}");
                     //return;
@@ -83,27 +87,13 @@ namespace BookReader
                     findbook = false;
                     book = new Book
                     {
-                        Language = language,
                         LanguageId = language.LanguageId,
-                        BookCategory = category,
                         BookCategoryId = category.BookCategoryId,
                         BookName = fi.Name.Replace(".txt", ""),
                         LastDateTime = DateTime.UtcNow,
                         BookInfo = string.Join('\n', lines.Skip(skipLines).Take(5))
                     };
                 }
-                var br = new BookResult
-                {
-                    Book = book,
-                    BookId = findbook ? book.BookId : 0,
-                    Language = language,
-                    ResultDateTime = DateTime.UtcNow,
-                    WordCount = wc,
-                    TotalCount = tc,
-                    Top10 = string.Join("", myList.Take(10).Select(p => p.Key).ToArray()),
-                    Top1020 = top1020,
-                    Top50 = string.Join("", myList.Take(50).Select(p => p.Key).ToArray())
-                };
                 book.PrevWordCount = book.LastWordCount;
                 book.PrevTotalCount = book.LastTotalCount;
                 book.LastWordCount = wc;
@@ -111,29 +101,41 @@ namespace BookReader
                 if (findbook) context.Update(book);
                 else
                 {
-                    book.TopIndexWords = br.Top1020;
+                    book.TopIndexWords = top1020;
+                    // 2018年4月17日 EF Core Add function returns negative id，why?
                     context.Add(book);
                 }
+                var br = new BookResult
+                {
+                    Book = book,
+                    BookId = findbook ? book.BookId : 0,
+                    LanguageId = language.LanguageId,
+                    ResultDateTime = DateTime.UtcNow,
+                    WordCount = wc,
+                    TotalCount = tc,
+                    Top10 = string.Join("", myList.Take(10).Select(p => p.Key).ToArray()),
+                    Top1020 = top1020,
+                    Top50 = string.Join("", myList.Take(50).Select(p => p.Key).ToArray())
+                };
                 context.Add(br);
                 context.SaveChanges();
-                // todo 2018年4月14日 利用缓存加快了10倍速度（比直接使用context.WordStatisticses.SingleOrDefault），
-                // 但是带来了多个程序同时访问数据库带来的数据不一致问题。
-                var wordsrepo = context.WordStatisticses.ToDictionary(p => p.WordUnicode, p => p);
+
+                var newwords = new List<WordStatistics>();
+                var wrs = new List<WordResult>();
                 foreach (var dic in cntdict)
                 {
-                    context.Add(new WordResult
+                    wrs.Add(new WordResult
                     {
                         Book = book,
                         BookId = book.BookId,
                         WordCount = dic.Value,
                         WordLetter = dic.Key
                     });
-                    var wordsta = wordsrepo.FirstOrDefault(p => p.Key == dic.Key.ToString()).Value;
-                    if (wordsta == null)
+                    if (!wordsRepo.ContainsKey(dic.Key))
                     {
-                        wordsta = new WordStatistics
+                        wordsRepo[dic.Key] = new WordStatistics
                         {
-                            WordUnicode = dic.Key.ToString(),
+                            WordUnicode = dic.Key,
                             TotalBook = 1,
                             TotalWords = wc,
                             TotalOccur = dic.Value,
@@ -142,12 +144,13 @@ namespace BookReader
                             MaxOccur = dic.Value,
                             BookCategory = category,
                             BookCategoryId = category.BookCategoryId,
-                            FirstBookId = book.BookId
+                            FirstBookId = book.BookId,
+                            WordLength = dic.Key.Length
                         };
-                        context.Add(wordsta);
                     }
                     else
                     {
+                        var wordsta = wordsRepo[dic.Key];
                         wordsta.TotalBook += 1;
                         wordsta.MaxOccur = Math.Max(wordsta.MaxOccur, dic.Value);
                         wordsta.MaxWords = Math.Max(wordsta.MaxWords, wc);
@@ -159,10 +162,21 @@ namespace BookReader
                         //    wordsta.TotalOccur -= ?? not book.PrevWordCount;
                         //    wordsta.TotalWords -= ?? not book.PrevTotalCount;
                         //}
-                        context.Update(wordsta);
+#if false
+#else
+                        wordsRepo[dic.Key] = wordsta;
+#endif
                     }
                 }
+#if false
+                context.AddRange(wrs);
+                context.UpdateRange(wordsrepo.Values);
                 context.SaveChanges();
+                context.AddRange(newwords);
+                context.SaveChanges();
+#else
+
+#endif
                 sw.Stop();
                 ++TotalBook;
                 TotalWords += wc;
@@ -179,7 +193,8 @@ namespace BookReader
             }
             catch (Exception e)
             {
-                context = Program.GetBookContext(connectionString);
+                // must create new context since old context has dirty data
+                var context = Program.GetBookContext(connectionString);
                 context.Add(new BookException
                 {
                     Top1020 = top1020,
@@ -229,9 +244,10 @@ namespace BookReader
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+            BookContext context = null;
             if (args.Length == 2 && args[0] == "init")
             {
-                BookContext context = GetBookContext("DataSource=" + args[1]);
+                context = GetBookContext("DataSource=" + args[1]);
                 if (context != null)
                 {
                     Console.WriteLine("success!");
@@ -250,22 +266,23 @@ namespace BookReader
                 return;
             }
             var datapath = args[0];//@"E:\xiabook";
-            BookContext gContext = GetBookContext("DataSource=" + args[4]);
-            var lang = gContext.Languages.SingleOrDefault(p => p.LanguageCode == args[1]);
+            var connectionString = "DataSource=" + args[4];
+            context = GetBookContext(connectionString);
+            var lang = context.Languages.SingleOrDefault(p => p.LanguageCode == args[1]);
             if (lang == null)
             {
                 Console.WriteLine("Please init language database using LanguageInit tool.");
                 return;
             }
-            var cate = gContext.BookCategories.SingleOrDefault(p => p.CategoryType == args[2]);
+            var cate = context.BookCategories.SingleOrDefault(p => p.CategoryType == args[2]);
             if (cate == null)
             {
                 cate = new BookCategory
                 {
                     CategoryType = args[2]
                 };
-                gContext.Add(cate);
-                gContext.SaveChanges();
+                context.Add(cate);
+                context.SaveChanges();
             }
 
 
@@ -283,10 +300,45 @@ namespace BookReader
             //    var newname = fi.FullName.Replace("_下书网www.xiabook.com", "");
             //    File.Move(s, newname);
             //});
+
+            // todo 2018年4月14日 利用缓存加快了10倍速度（比直接使用context.WordStatisticses.SingleOrDefault），
+            // 但是带来了多个程序同时访问数据库带来的数据不一致问题。
+            Dictionary<string, WordStatistics> wordsRepo = context.WordStatisticses.ToDictionary(p => p.WordUnicode, p => p);
+
             DirSearch(datapath, s =>
             {
-                parser.ReadTxtFile(s, lang, cate, gContext, Convert.ToInt32(args[3]), "DataSource=" + args[4]);
+                parser.ReadTxtFile(s, lang, cate, Convert.ToInt32(args[3]), connectionString, ref wordsRepo);
             });
+            Console.WriteLine("Book recursive visit finished. starting commit!");
+            using (var targetconn = new SqliteConnection(
+                "" +
+                new SqliteConnectionStringBuilder(connectionString)))
+            {
+                targetconn.Open();
+                using (var transaction = targetconn.BeginTransaction())
+                {
+                    foreach (var item in wordsRepo.Values)
+                    {
+                        var insertCommand = targetconn.CreateCommand();
+                        insertCommand.Transaction = transaction;
+                        insertCommand.CommandText =
+                            $"INSERT or replace into WordStatisticses ( WordUnicode, WordLength, TotalBook,TotalWords,TotalOccur,MaxWords,MaxOccur,MaxRatio,BookCategoryId,FirstBookId )" +
+                            $" VALUES ( '{item.WordUnicode}', {item.WordLength}, {item.TotalBook}, {item.TotalWords},{item.TotalOccur}, {item.MaxWords}, {item.MaxOccur},{item.MaxRatio},{item.BookCategoryId},{item.FirstBookId} )";
+                        insertCommand.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+            }
+            Console.WriteLine("Commit db finished.");
+            using(var writer = new StreamWriter(args[4] + ".result.txt"))
+            {
+                writer.WriteLine("WordUnicode, WordLength, TotalBook,TotalWords,TotalOccur,MaxWords,MaxOccur,MaxRatio,BookCategoryId,FirstBookId");
+                foreach(var item in wordsRepo.Values)
+                {
+                    writer.WriteLine($"{item.WordUnicode}, {item.WordLength}, {item.TotalBook}, {item.TotalWords},{item.TotalOccur}, {item.MaxWords}, {item.MaxOccur},{item.MaxRatio},{item.BookCategoryId},{item.FirstBookId}");
+                }
+            }
         }
 
         public static BookContext GetBookContext(string connectionString)

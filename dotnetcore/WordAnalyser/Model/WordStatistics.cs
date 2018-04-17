@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace WordAnalyser.Model
@@ -7,7 +8,11 @@ namespace WordAnalyser.Model
     public class WordStatistics
     {
         public int WordStatisticsId { get; set; }
+        // see https://en.wikipedia.org/wiki/Longest_word_in_English
+        // only 5 words longer than 30.
+        [StringLength(30)]
         public string WordUnicode { get; set; }
+        public int WordLength { get; set; }
         /// <summary>
         /// 出现过该文字的书籍数量
         /// </summary>

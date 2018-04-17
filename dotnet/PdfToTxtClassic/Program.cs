@@ -30,6 +30,11 @@ namespace PdfToTxtClassic
 
         static void Main(string[] args)
         {
+            if(args.Length != 1)
+            {
+                Console.WriteLine("Usage: <program> <root-dir>");
+                return;
+            }
             PDFParser pdfParser = new PDFParser();
 
             DirSearch(args[0], filename =>
