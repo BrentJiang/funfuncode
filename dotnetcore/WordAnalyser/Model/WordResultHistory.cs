@@ -6,7 +6,7 @@ namespace WordAnalyser.Model
 {
     public class WordResultHistory : WordResult
     {
-        public int WordResultHistoryId { get; set; }
+        public Int64 WordResultHistoryId { get; set; }
         public DateTime ArchiveDateTime { get; set; }
     }
 }

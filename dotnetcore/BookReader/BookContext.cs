@@ -32,6 +32,11 @@ namespace BookReader
                 .HasIndex(b => b.WordUnicode).IsUnique(true);
             modelBuilder.Entity<BookCategory>()
                 .HasIndex(b => b.CategoryType).IsUnique(true);
+            modelBuilder.Entity<MapBookCategory>()
+                .HasIndex(b => new { b.BookId, b.BookCategoryId}).IsUnique(true);
+            // 通过CategoryID得到相关的所有图书
+            modelBuilder.Entity<MapBookCategory>()
+                .HasIndex(b => new { b.BookCategoryId}).IsUnique(false);
         }
     }
 

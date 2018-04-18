@@ -7,16 +7,16 @@ namespace QRCodeMain.Models
 {
     public class QrCode
     {
-        public int QrCodeId { get; set; }
+        public Int64 QrCodeId { get; set; }
         public string QrCodeRelativePath { get; set; }
         public Article Article { get; set; }
     }
 
     public class Article
     {
-        public int QrCodeId { get; set; }
+        public Int64 QrCodeId { get; set; }
         public virtual QrCode QrCode { get; set; }
-        public int ArticleId { get; set; }
+        public Int64 ArticleId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public List<Comment> Comments { get; set; }
@@ -27,7 +27,7 @@ namespace QRCodeMain.Models
 
     public class Comment
     {
-        public int CommentId { get; set; }
+        public Int64 CommentId { get; set; }
         public string Content { get; set; }
     }
     /// <summary>
@@ -35,7 +35,7 @@ namespace QRCodeMain.Models
     /// </summary>
     public class Category
     {
-        public int CategoryId { get; set; }
+        public Int64 CategoryId { get; set; }
         public string Title { get; set; }
     }
 
@@ -44,35 +44,35 @@ namespace QRCodeMain.Models
     /// </summary>
     public class UserTag
     {
-        public int UserTagId { get; set; }
+        public Int64 UserTagId { get; set; }
         public string Title { get; set; }
     }
 
     public class WordStatistics
     {
-        public int WordStatisticsId { get; set; }
+        public Int64 WordStatisticsId { get; set; }
         public string WordUnicode { get; set; }
         public string WordDescription { get; set; }
         /// <summary>
         /// 出现过该文字的书籍数量
         /// </summary>
-        public int TotalBook { get; set; }
+        public Int64 TotalBook { get; set; }
         /// <summary>
         /// 出现过该字的文字量最大的一本书里面的文字量
         /// </summary>
-        public int TotalWords { get; set; }
+        public Int64 TotalWords { get; set; }
         /// <summary>
         /// 出现过该文字的所有书里面该文字的出现次数总和
         /// </summary>
-        public int TotalOccur { get; set; }
+        public Int64 TotalOccur { get; set; }
         /// <summary>
         /// 出现过该字的词汇量最大的一本书里面的词汇量
         /// </summary>
-        public int MaxWords { get; set; }
+        public Int64 MaxWords { get; set; }
         /// <summary>
         /// 出现过该文字次数做多的一本书里面该文字的出现次数
         /// </summary>
-        public int MaxOccur { get; set; }
+        public Int64 MaxOccur { get; set; }
         /// <summary>
         /// 出现过该文字次数做多的一本书里面该文字的出现比率
         /// </summary>

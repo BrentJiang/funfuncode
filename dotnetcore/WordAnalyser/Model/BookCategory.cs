@@ -6,7 +6,7 @@ namespace WordAnalyser.Model
 {
     public class BookCategory
     {
-        public int BookCategoryId { get; set; }
+        public Int64 BookCategoryId { get; set; }
         public string CategoryType { get; set; }
     }
 }

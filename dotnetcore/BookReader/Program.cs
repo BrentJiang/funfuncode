@@ -88,7 +88,6 @@ namespace BookReader
                     book = new Book
                     {
                         LanguageId = language.LanguageId,
-                        BookCategoryId = category.BookCategoryId,
                         BookName = fi.Name.Replace(".txt", ""),
                         LastDateTime = DateTime.UtcNow,
                         BookInfo = string.Join('\n', lines.Skip(skipLines).Take(5))
@@ -105,11 +104,17 @@ namespace BookReader
                     // 2018年4月17日 EF Core Add function returns negative id，why?
                     context.Add(book);
                 }
+                MapBookCategory map = new MapBookCategory
+                {
+                    Book = book,
+                    BookCategory = category
+                };
                 var br = new BookResult
                 {
                     Book = book,
                     BookId = findbook ? book.BookId : 0,
                     LanguageId = language.LanguageId,
+                    BookCategoryId = category.BookCategoryId,
                     ResultDateTime = DateTime.UtcNow,
                     WordCount = wc,
                     TotalCount = tc,

@@ -10,19 +10,18 @@ namespace WordAnalyser.Model
     /// </summary>
     public class BookResult
     {
-        public int BookResultId { get; set; }
-        public int BookId { get; set; }
+        public Int64 BookResultId { get; set; }
+        public Int64 BookId { get; set; }
         public virtual Book Book { get; set; }
-        public int LanguageId { get; set; }
-        public virtual Language Language { get; set; }
+        public Int64 LanguageId { get; set; }
         /// <summary>
         /// 词汇量
         /// </summary>
-        public int WordCount { get; set; }
+        public Int64 WordCount { get; set; }
         /// <summary>
         /// 字数
         /// </summary>
-        public int TotalCount { get; set; }
+        public Int64 TotalCount { get; set; }
         public DateTime ResultDateTime { get; set; }
         /// <summary>
         /// 处理分析器信息，例如词库信息等。
@@ -32,5 +31,6 @@ namespace WordAnalyser.Model
         [StringLength(100)]
         public string Top1020 { get; set; }
         public string Top50 { get; set; }
+        public Int64 BookCategoryId { get; set; }
     }
 }

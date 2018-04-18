@@ -10,7 +10,7 @@ namespace QRCodeMain.Models.ManageViewModels
     {
         public bool HasAuthenticator { get; set; }
 
-        public int RecoveryCodesLeft { get; set; }
+        public Int64 RecoveryCodesLeft { get; set; }
 
         public bool Is2faEnabled { get; set; }
     }

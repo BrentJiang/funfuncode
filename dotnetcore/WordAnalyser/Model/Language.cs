@@ -6,9 +6,9 @@ namespace WordAnalyser.Model
 {
     public class Language
     {
-        public int LanguageId { get; set; }
+        public Int64 LanguageId { get; set; }
         public string LanguageCode { get; set; }
         public string LanguageName { get; set; }
-        public int LanguageType { get; set; }
+        public Int64 LanguageType { get; set; }
     }
 }
