@@ -329,7 +329,7 @@ namespace BookReader
             {
                 parser.ReadTxtFile(s, lang, cate, Convert.ToInt32(args[3]), connectionString, ref wordsRepo);
             });
-            Console.WriteLine("Book recursive visit finished. starting commit!");
+            Console.WriteLine($"{DateTime.Now:yyyyMMdd HH:mm:ss.fff} Book recursive visit finished. starting commit!");
             using (var targetconn = new SqliteConnection(
                 "" +
                 new SqliteConnectionStringBuilder(connectionString)))
@@ -350,11 +350,13 @@ namespace BookReader
                     transaction.Commit();
                 }
             }
-            Console.WriteLine("Commit db finished.");
+            Console.WriteLine($"{DateTime.Now:yyyyMMdd HH:mm:ss.fff} Commit db finished.");
             using(var writer = new StreamWriter(args[4] + ".result.txt"))
             {
                 writer.WriteLine("WordUnicode, WordLength, TotalBook,TotalWords,TotalOccur,MaxWords,MaxOccur,MaxRatio,BookCategoryId,FirstBookId");
-                foreach(var item in wordsRepo.Values)
+                var sorted = wordsRepo.Values.ToList();
+                sorted.Sort((pair1, pair2) => pair2.TotalOccur.CompareTo(pair1.TotalOccur));
+                foreach (var item in sorted)
                 {
                     writer.WriteLine($"{item.WordUnicode}, {item.WordLength}, {item.TotalBook}, {item.TotalWords},{item.TotalOccur}, {item.MaxWords}, {item.MaxOccur},{item.MaxRatio},{item.BookCategoryId},{item.FirstBookId}");
                 }
