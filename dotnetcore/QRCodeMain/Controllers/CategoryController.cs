@@ -33,7 +33,7 @@ namespace QRCodeMain.Controllers
         }
 
         // GET: Category/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Int64? id)
         {
             if (id == null)
             {
@@ -73,7 +73,7 @@ namespace QRCodeMain.Controllers
         }
 
         // GET: Category/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Int64? id)
         {
             if (id == null)
             {
@@ -93,7 +93,7 @@ namespace QRCodeMain.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CategoryId,Title")] Category category)
+        public async Task<IActionResult> Edit(Int64 id, [Bind("CategoryId,Title")] Category category)
         {
             if (id != category.CategoryId)
             {
@@ -124,7 +124,7 @@ namespace QRCodeMain.Controllers
         }
 
         // GET: Category/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Int64? id)
         {
             if (id == null)
             {
@@ -144,7 +144,7 @@ namespace QRCodeMain.Controllers
         // POST: Category/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Int64 id)
         {
             var category = await _context.Categories.SingleOrDefaultAsync(m => m.CategoryId == id);
             _context.Categories.Remove(category);
@@ -152,7 +152,7 @@ namespace QRCodeMain.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryExists(int id)
+        private bool CategoryExists(Int64 id)
         {
             return _context.Categories.Any(e => e.CategoryId == id);
         }

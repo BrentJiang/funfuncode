@@ -99,7 +99,7 @@ namespace QRCodeMain.Controllers
             for (int n = 0; n < items.Count; ++n)
             {
                 var item = items[n];
-                for (int i = 0; i < item.Item3; ++i)
+                for (Int64 i = 0; i < item.Item3; ++i)
                 {
                     var word = data[rand.Next(Math.Min(item.Item1, data.Count), Math.Min(item.Item2, data.Count))];  //random的区间是：左闭右开[）
                     char correctanswer = (char)rand.Next('A', 'E');
@@ -123,7 +123,7 @@ namespace QRCodeMain.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitTest(int id, IEnumerable<VocabularyTestDetail> answers)
+        public async Task<IActionResult> SubmitTest(Int64 id, IEnumerable<VocabularyTestDetail> answers)
         {
             if (ModelState.IsValid)
             {
@@ -136,7 +136,7 @@ namespace QRCodeMain.Controllers
             return NotFound();
         }
 
-        private async Task<MyVocabularyTest> Judge(int id, IEnumerable<VocabularyTestDetail> answers)
+        private async Task<MyVocabularyTest> Judge(Int64 id, IEnumerable<VocabularyTestDetail> answers)
         {
             var model = await _context.MyVocabularyTests.Include(p => p.Language).SingleOrDefaultAsync(p => p.MyVocabularyTestId == id);
             model.Score = answers.Count(p=> p.CorrectAnswer == p.FinalAnswer) * (100.0f/(double)model.TestWordCount);
@@ -153,7 +153,7 @@ namespace QRCodeMain.Controllers
         }
 
         // GET: WordStatistics/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Int64? id)
         {
             if (id == null)
             {
@@ -193,7 +193,7 @@ namespace QRCodeMain.Controllers
         }
 
         // GET: WordStatistics/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Int64? id)
         {
             if (id == null)
             {
@@ -213,7 +213,7 @@ namespace QRCodeMain.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("WordStatisticsId,WordUnicode,TotalBook,TotalWords,TotalOccur,MaxWords,MaxOccur,MaxRatio")] WordStatistics wordStatistics)
+        public async Task<IActionResult> Edit(Int64 id, [Bind("WordStatisticsId,WordUnicode,TotalBook,TotalWords,TotalOccur,MaxWords,MaxOccur,MaxRatio")] WordStatistics wordStatistics)
         {
             if (id != wordStatistics.WordStatisticsId)
             {
@@ -244,7 +244,7 @@ namespace QRCodeMain.Controllers
         }
 
         // GET: WordStatistics/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Int64? id)
         {
             if (id == null)
             {
@@ -264,7 +264,7 @@ namespace QRCodeMain.Controllers
         // POST: WordStatistics/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Int64 id)
         {
             var wordStatistics = await _context.WordStatisticses.SingleOrDefaultAsync(m => m.WordStatisticsId == id);
             _context.WordStatisticses.Remove(wordStatistics);
@@ -272,7 +272,7 @@ namespace QRCodeMain.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WordStatisticsExists(int id)
+        private bool WordStatisticsExists(Int64 id)
         {
             return _context.WordStatisticses.Any(e => e.WordStatisticsId == id);
         }

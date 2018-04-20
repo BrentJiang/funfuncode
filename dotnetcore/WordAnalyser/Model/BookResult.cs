@@ -31,6 +31,6 @@ namespace WordAnalyser.Model
         [StringLength(100)]
         public string Top1020 { get; set; }
         public string Top50 { get; set; }
-        public Int64 BookCategoryId { get; set; }
+        public Int64 BookTrack { get; set; }
     }
 }

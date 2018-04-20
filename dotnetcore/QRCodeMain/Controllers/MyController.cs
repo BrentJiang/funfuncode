@@ -42,7 +42,7 @@ namespace QRCodeMain.Controllers
         }
 
         // GET: My/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Int64? id)
         {
             if (id == null)
             {
@@ -98,7 +98,7 @@ namespace QRCodeMain.Controllers
                 _context.Add(article);
                 await _context.SaveChangesAsync();
                 // see How can I get Id of inserted entity in Entity framework?https://stackoverflow.com/questions/5212751
-                int lastArticleId =
+                Int64 lastArticleId =
                     article.ArticleId; // yes, it's here! another way is: _context.Articles.Max(item => item.ArticleId);
                 await _context.SaveChangesAsync();
                 newcode.QrCodeRelativePath = $"My/Detail/{newcode.QrCodeId}";
@@ -110,7 +110,7 @@ namespace QRCodeMain.Controllers
         }
 
         // GET: My/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Int64? id)
         {
             if (id == null)
             {
@@ -131,7 +131,7 @@ namespace QRCodeMain.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ArticleId,Title,Content")] Article article)
+        public async Task<IActionResult> Edit(Int64 id, [Bind("ArticleId,Title,Content")] Article article)
         {
             if (id != article.ArticleId)
             {
@@ -162,7 +162,7 @@ namespace QRCodeMain.Controllers
         }
 
         // GET: My/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Int64? id)
         {
             if (id == null)
             {
@@ -182,7 +182,7 @@ namespace QRCodeMain.Controllers
         // POST: My/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Int64 id)
         {
             var article = await _context.Articles.SingleOrDefaultAsync(m => m.ArticleId == id);
             _context.Articles.Remove(article);
@@ -190,13 +190,13 @@ namespace QRCodeMain.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ArticleExists(int id)
+        private bool ArticleExists(Int64 id)
         {
             return _context.Articles.Any(e => e.ArticleId == id);
         }
 
         // GET: My/Delete/5
-        public async Task<IActionResult> AttachCategory(int? categoryId, int? articleId)
+        public async Task<IActionResult> AttachCategory(Int64? categoryId, Int64? articleId)
         {
             if (categoryId == null || articleId == null)
             {
@@ -211,7 +211,7 @@ namespace QRCodeMain.Controllers
         }
 
         // GET: My/Delete/5
-        public async Task<IActionResult> DetachCategory(int? categoryId, int? articleId)
+        public async Task<IActionResult> DetachCategory(Int64? categoryId, Int64? articleId)
         {
             if (categoryId == null || articleId == null)
             {

@@ -38,7 +38,11 @@ namespace BookReader
                 .HasIndex(b => new { b.BookId, b.BookCategoryId}).IsUnique(true);
             // 通过CategoryID得到相关的所有图书
             modelBuilder.Entity<MapBookCategory>()
-                .HasIndex(b => new { b.BookCategoryId}).IsUnique(false);
+                .HasIndex(b => new { b.BookCategoryId, b.BookId }).IsUnique(true);
+            modelBuilder.Entity<MapBookCategory>()
+                .HasIndex(b => new { b.BookCategoryId }).IsUnique(false);
+            modelBuilder.Entity<MapBookCategory>()
+                .HasIndex(b => new { b.BookId}).IsUnique(false);
         }
     }
 

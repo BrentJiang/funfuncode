@@ -22,7 +22,7 @@ namespace BookReader
     class Parser
     {
         private double TotalTime = 0;
-        private int TotalBook = 0;
+        private Int64 TotalBook = 0;
         private Int64 TotalWords = 0;
 
         public void ReadTxtFile(string filePathName, Language language, BookCategory category, int skipLines, string connectionString, ref Dictionary<string, WordStatistics> wordsRepo)
@@ -35,10 +35,10 @@ namespace BookReader
 
             sw.Start();
             var lines = File.ReadLines(filePathName);
-            var cntdict = new Dictionary<string, int>();
-            int wc = 0;
-            int tc = 0;
-            int linenum = 0;
+            var cntdict = new Dictionary<string, Int64>();
+            Int64 wc = 0;
+            Int64 tc = 0;
+            Int64 linenum = 0;
             // 定义enumerable 避免可能的对IEnumerable的遍历，这是ReSharper提示的优化项。
             var enumerable = lines as IList<string> ?? lines.ToList();
             foreach (var line in enumerable)
@@ -68,7 +68,7 @@ namespace BookReader
                     $"{TotalBook}: Parse total words: {tc}, different words: {wc}, less than 50!!!!! {fi.Name.Replace(".txt", "")}");
                 return;
             }
-            List<KeyValuePair<string, int>> myList = cntdict.ToList();
+            List<KeyValuePair<string, Int64>> myList = cntdict.ToList();
             myList.Sort(
                 (pair1, pair2) => pair2.Value.CompareTo(pair1.Value)
             );
@@ -116,17 +116,20 @@ namespace BookReader
                     // 2018年4月17日 EF Core Add function returns negative id，why?
                     context.Add(book);
                 }
+                context.SaveChanges();
                 MapBookCategory map = new MapBookCategory
                 {
-                    Book = book,
-                    BookCategory = category
+                    BookId =  book.BookId,
+                    BookCategoryId = category.BookCategoryId
                 };
+                context.Add(map);
+                context.SaveChanges();
                 var br = new BookResult
                 {
                     Book = book,
                     BookId = findbook ? book.BookId : 0,
                     LanguageId = language.LanguageId,
-                    BookCategoryId = category.BookCategoryId,
+                    BookTrack = booktrack.BookTrackId,
                     ResultDateTime = DateTime.UtcNow,
                     WordCount = wc,
                     TotalCount = tc,
@@ -200,7 +203,7 @@ namespace BookReader
                 TotalTime += sw.ElapsedMilliseconds;
                 Console.WriteLine(
                     $"{TotalBook}: Parse finished, total words: {tc}, different words: {wc}, average elapsed milliseconds: {(double) TotalTime / (double) TotalBook}, average words: {(double) TotalWords / (double) TotalBook}. {book.BookName}");
-                int i = 0;
+                Int64 i = 0;
                 foreach (var count in myList)
                 {
                     if (i++ > 10)

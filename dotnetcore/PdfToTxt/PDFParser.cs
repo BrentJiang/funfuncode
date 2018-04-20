@@ -19,7 +19,7 @@ namespace PdfToTxt
         /// <summary>
         /// The number of characters to keep, when extracting text.
         /// </summary>
-        private static int _numberOfCharsToKeep = 15;
+        private static Int64 _numberOfCharsToKeep = 15;
         #endregion
 
         #endregion
@@ -46,9 +46,9 @@ namespace PdfToTxt
 
                 Console.Write("Processing: ");
 
-                int totalLen = 68;
+                Int64 totalLen = 68;
                 float charUnit = ((float)totalLen) / (float)reader.NumberOfPages;
-                int totalWritten = 0;
+                Int64 totalWritten = 0;
                 float curUnit = 0;
 
                 for (int page = 1; page <= reader.NumberOfPages; page++)
@@ -70,7 +70,7 @@ namespace PdfToTxt
                     // Write the progress.
                     if (charUnit >= 1.0f)
                     {
-                        for (int i = 0; i < (int)charUnit; i++)
+                        for (Int64 i = 0; i < (Int64)charUnit; i++)
                         {
                             Console.Write("#");
                             totalWritten++;
@@ -81,7 +81,7 @@ namespace PdfToTxt
                         curUnit += charUnit;
                         if (curUnit >= 1.0f)
                         {
-                            for (int i = 0; i < (int)curUnit; i++)
+                            for (Int64 i = 0; i < (Int64)curUnit; i++)
                             {
                                 Console.Write("#");
                                 totalWritten++;
@@ -94,7 +94,7 @@ namespace PdfToTxt
 
                 if (totalWritten < totalLen)
                 {
-                    for (int i = 0; i < (totalLen - totalWritten); i++)
+                    for (Int64 i = 0; i < (totalLen - totalWritten); i++)
                     {
                         Console.Write("#");
                     }
@@ -137,14 +137,14 @@ namespace PdfToTxt
                 bool nextLiteral = false;
 
                 // () Bracket nesting level. Text appears inside ()
-                int bracketDepth = 0;
+                Int64 bracketDepth = 0;
 
                 // Keep previous chars to get extract numbers etc.:
                 char[] previousCharacters = new char[_numberOfCharsToKeep];
-                for (int j = 0; j < _numberOfCharsToKeep; j++) previousCharacters[j] = ' ';
+                for (Int64 j = 0; j < _numberOfCharsToKeep; j++) previousCharacters[j] = ' ';
 
 
-                for (int i = 0; i < input.Length; i++)
+                for (Int64 i = 0; i < input.Length; i++)
                 {
                     char c = (char)input[i];
 
@@ -224,7 +224,7 @@ namespace PdfToTxt
 
                     // Store the recent characters for 
                     // when we have to go back for a checking
-                    for (int j = 0; j < _numberOfCharsToKeep - 1; j++)
+                    for (Int64 j = 0; j < _numberOfCharsToKeep - 1; j++)
                     {
                         previousCharacters[j] = previousCharacters[j + 1];
                     }

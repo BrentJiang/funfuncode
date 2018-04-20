@@ -12,11 +12,11 @@ namespace QRCodeMain.Migrations
                 name: "Languages",
                 columns: table => new
                 {
-                    LanguageId = table.Column<int>(nullable: false)
+                    LanguageId = table.Column<Int64>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     LanguageCode = table.Column<string>(nullable: true),
                     LanguageName = table.Column<string>(nullable: true),
-                    LanguageType = table.Column<int>(nullable: false)
+                    LanguageType = table.Column<Int64>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,7 +27,7 @@ namespace QRCodeMain.Migrations
                 name: "QrCodes",
                 columns: table => new
                 {
-                    QrCodeId = table.Column<int>(nullable: false)
+                    QrCodeId = table.Column<Int64>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     QrCodeRelativePath = table.Column<string>(nullable: true)
                 },
@@ -40,14 +40,14 @@ namespace QRCodeMain.Migrations
                 name: "WordStatisticses",
                 columns: table => new
                 {
-                    WordStatisticsId = table.Column<int>(nullable: false)
+                    WordStatisticsId = table.Column<Int64>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    MaxOccur = table.Column<int>(nullable: false),
+                    MaxOccur = table.Column<Int64>(nullable: false),
                     MaxRatio = table.Column<double>(nullable: false),
-                    MaxWords = table.Column<int>(nullable: false),
-                    TotalBook = table.Column<int>(nullable: false),
-                    TotalOccur = table.Column<int>(nullable: false),
-                    TotalWords = table.Column<int>(nullable: false),
+                    MaxWords = table.Column<Int64>(nullable: false),
+                    TotalBook = table.Column<Int64>(nullable: false),
+                    TotalOccur = table.Column<Int64>(nullable: false),
+                    TotalWords = table.Column<Int64>(nullable: false),
                     WordDescription = table.Column<string>(nullable: true),
                     WordUnicode = table.Column<string>(nullable: true)
                 },
@@ -60,11 +60,11 @@ namespace QRCodeMain.Migrations
                 name: "MyVocabularyStatisticses",
                 columns: table => new
                 {
-                    MyVocabularyStatisticsId = table.Column<int>(nullable: false)
+                    MyVocabularyStatisticsId = table.Column<Int64>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     CurrentScore = table.Column<double>(nullable: false),
-                    LanguageId = table.Column<int>(nullable: false),
-                    TotalTestCount = table.Column<int>(nullable: false),
+                    LanguageId = table.Column<Int64>(nullable: false),
+                    TotalTestCount = table.Column<Int64>(nullable: false),
                     UserName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -82,13 +82,13 @@ namespace QRCodeMain.Migrations
                 name: "MyVocabularyTests",
                 columns: table => new
                 {
-                    MyVocabularyTestId = table.Column<int>(nullable: false)
+                    MyVocabularyTestId = table.Column<Int64>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    CorrectWordCount = table.Column<int>(nullable: false),
-                    LanguageId = table.Column<int>(nullable: false),
+                    CorrectWordCount = table.Column<Int64>(nullable: false),
+                    LanguageId = table.Column<Int64>(nullable: false),
                     Score = table.Column<double>(nullable: false),
                     TestTime = table.Column<DateTime>(nullable: false),
-                    TestWordCount = table.Column<int>(nullable: false),
+                    TestWordCount = table.Column<Int64>(nullable: false),
                     UserName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -106,14 +106,14 @@ namespace QRCodeMain.Migrations
                 name: "UserVocabularies",
                 columns: table => new
                 {
-                    UserVocabularyId = table.Column<int>(nullable: false)
+                    UserVocabularyId = table.Column<Int64>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    CriticalTimes = table.Column<int>(nullable: false),
-                    LanguageId = table.Column<int>(nullable: false),
-                    TestTimes = table.Column<int>(nullable: false),
+                    CriticalTimes = table.Column<Int64>(nullable: false),
+                    LanguageId = table.Column<Int64>(nullable: false),
+                    TestTimes = table.Column<Int64>(nullable: false),
                     UserName = table.Column<string>(nullable: true),
                     WordUnicode = table.Column<string>(nullable: true),
-                    WrongTimes = table.Column<int>(nullable: false)
+                    WrongTimes = table.Column<Int64>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -130,10 +130,10 @@ namespace QRCodeMain.Migrations
                 name: "Articles",
                 columns: table => new
                 {
-                    ArticleId = table.Column<int>(nullable: false)
+                    ArticleId = table.Column<Int64>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Content = table.Column<string>(nullable: true),
-                    QrCodeId = table.Column<int>(nullable: false),
+                    QrCodeId = table.Column<Int64>(nullable: false),
                     Title = table.Column<string>(nullable: true),
                     UserName = table.Column<string>(nullable: true)
                 },
@@ -152,7 +152,7 @@ namespace QRCodeMain.Migrations
                 name: "VocabularyTestDetails",
                 columns: table => new
                 {
-                    VocabularyTestDetailId = table.Column<int>(nullable: false)
+                    VocabularyTestDetailId = table.Column<Int64>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     AnswerContentA = table.Column<string>(nullable: true),
                     AnswerContentB = table.Column<string>(nullable: true),
@@ -161,7 +161,7 @@ namespace QRCodeMain.Migrations
                     CorrectAnswer = table.Column<char>(nullable: false),
                     FinalAnswer = table.Column<char>(nullable: false),
                     LanguageCode = table.Column<string>(nullable: true),
-                    VocabularyTestId = table.Column<int>(nullable: false),
+                    VocabularyTestId = table.Column<Int64>(nullable: false),
                     WordUnicode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -179,9 +179,9 @@ namespace QRCodeMain.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    CategoryId = table.Column<int>(nullable: false)
+                    CategoryId = table.Column<Int64>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ArticleId = table.Column<int>(nullable: true),
+                    ArticleId = table.Column<Int64>(nullable: true),
                     Title = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -199,9 +199,9 @@ namespace QRCodeMain.Migrations
                 name: "Comments",
                 columns: table => new
                 {
-                    CommentId = table.Column<int>(nullable: false)
+                    CommentId = table.Column<Int64>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ArticleId = table.Column<int>(nullable: true),
+                    ArticleId = table.Column<Int64>(nullable: true),
                     Content = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -219,9 +219,9 @@ namespace QRCodeMain.Migrations
                 name: "UserTags",
                 columns: table => new
                 {
-                    UserTagId = table.Column<int>(nullable: false)
+                    UserTagId = table.Column<Int64>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ArticleId = table.Column<int>(nullable: true),
+                    ArticleId = table.Column<Int64>(nullable: true),
                     Title = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
