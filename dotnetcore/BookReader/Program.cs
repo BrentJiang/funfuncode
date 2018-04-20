@@ -39,7 +39,9 @@ namespace BookReader
             int wc = 0;
             int tc = 0;
             int linenum = 0;
-            foreach (var line in lines)
+            // 定义enumerable 避免可能的对IEnumerable的遍历，这是ReSharper提示的优化项。
+            var enumerable = lines as IList<string> ?? lines.ToList();
+            foreach (var line in enumerable)
             {
                 ++linenum;
                 if (linenum <= skipLines) // todo: this is temp for downloaded book
@@ -76,11 +78,21 @@ namespace BookReader
             try
             {
                 var context = Program.GetBookContext(connectionString);
+                // 添加跟踪信息
+                var booktrack = new BookTrack
+                {
+                    Top1020 = top1020,
+                    OriginalPath = filePathName,
+                    BookInfo = string.Join('\n', enumerable.Skip(skipLines).Take(5))
+                };
+                context.Add(booktrack);
+                context.SaveChanges();
+
                 var book = context.Books.SingleOrDefault(p => p.TopIndexWords == top1020); // Include(p => p.Language).Include(p => p.BookCategory).
                 if (book != null)
                 {
-                    Console.WriteLine($"Already exists: {fi.Name}");
-                    //return;
+                    Console.WriteLine($"book already exists: {fi.Name}, tracked in BookTrack and not calculate statistics.");
+                    return;
                 }
                 if (book == null)
                 {
@@ -90,7 +102,7 @@ namespace BookReader
                         LanguageId = language.LanguageId,
                         BookName = fi.Name.Replace(".txt", ""),
                         LastDateTime = DateTime.UtcNow,
-                        BookInfo = string.Join('\n', lines.Skip(skipLines).Take(5))
+                        BookInfo = string.Join('\n', enumerable.Skip(skipLines).Take(5))
                     };
                 }
                 book.PrevWordCount = book.LastWordCount;

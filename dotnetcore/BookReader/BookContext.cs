@@ -17,6 +17,8 @@ namespace BookReader
         public DbSet<BookException> BookExceptions { get; set; }
         public DbSet<WordResultHistory> WordResultHistories { get; set; }
         public DbSet<WordStatistics> WordStatisticses { get; set; }
+        public DbSet<BookTrack> BookTracks { get; set; }
+        public DbSet<MapBookCategory> MapBookCategories { get; set; }
 
         public BookContext(DbContextOptions<BookContext> options)
             : base(options)
