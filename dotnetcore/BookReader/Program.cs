@@ -351,7 +351,8 @@ namespace BookReader
                 }
             }
             Console.WriteLine($"{DateTime.Now:yyyyMMdd HH:mm:ss.fff} Commit db finished.");
-            using(var writer = new StreamWriter(args[4] + ".result.txt"))
+            Directory.CreateDirectory("result");
+            using(var writer = new StreamWriter($"result/{DateTime.Now:yyyyMMddHHmmss}.txt"))
             {
                 writer.WriteLine("WordUnicode, WordLength, TotalBook,TotalWords,TotalOccur,MaxWords,MaxOccur,MaxRatio,BookCategoryId,FirstBookId");
                 var sorted = wordsRepo.Values.ToList();
