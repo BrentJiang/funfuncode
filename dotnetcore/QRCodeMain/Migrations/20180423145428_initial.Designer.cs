@@ -11,7 +11,7 @@ using System;
 namespace QRCodeMain.Migrations
 {
     [DbContext(typeof(MvcQrCodeContext))]
-    [Migration("20180416161505_initial")]
+    [Migration("20180423145428_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,12 +22,12 @@ namespace QRCodeMain.Migrations
 
             modelBuilder.Entity("QRCodeMain.Models.Article", b =>
                 {
-                    b.Property<Int64>("ArticleId")
+                    b.Property<long>("ArticleId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content");
 
-                    b.Property<Int64>("QrCodeId");
+                    b.Property<long>("QrCodeId");
 
                     b.Property<string>("Title");
 
@@ -43,10 +43,10 @@ namespace QRCodeMain.Migrations
 
             modelBuilder.Entity("QRCodeMain.Models.Category", b =>
                 {
-                    b.Property<Int64>("CategoryId")
+                    b.Property<long>("CategoryId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Int64?>("ArticleId");
+                    b.Property<long?>("ArticleId");
 
                     b.Property<string>("Title");
 
@@ -59,10 +59,10 @@ namespace QRCodeMain.Migrations
 
             modelBuilder.Entity("QRCodeMain.Models.Comment", b =>
                 {
-                    b.Property<Int64>("CommentId")
+                    b.Property<long>("CommentId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Int64?>("ArticleId");
+                    b.Property<long?>("ArticleId");
 
                     b.Property<string>("Content");
 
@@ -75,7 +75,7 @@ namespace QRCodeMain.Migrations
 
             modelBuilder.Entity("QRCodeMain.Models.QrCode", b =>
                 {
-                    b.Property<Int64>("QrCodeId")
+                    b.Property<long>("QrCodeId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("QrCodeRelativePath");
@@ -87,10 +87,10 @@ namespace QRCodeMain.Migrations
 
             modelBuilder.Entity("QRCodeMain.Models.UserTag", b =>
                 {
-                    b.Property<Int64>("UserTagId")
+                    b.Property<long>("UserTagId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Int64?>("ArticleId");
+                    b.Property<long?>("ArticleId");
 
                     b.Property<string>("Title");
 
@@ -103,20 +103,20 @@ namespace QRCodeMain.Migrations
 
             modelBuilder.Entity("QRCodeMain.Models.WordStatistics", b =>
                 {
-                    b.Property<Int64>("WordStatisticsId")
+                    b.Property<long>("WordStatisticsId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Int64>("MaxOccur");
+                    b.Property<long>("MaxOccur");
 
                     b.Property<double>("MaxRatio");
 
-                    b.Property<Int64>("MaxWords");
+                    b.Property<long>("MaxWords");
 
-                    b.Property<Int64>("TotalBook");
+                    b.Property<long>("TotalBook");
 
-                    b.Property<Int64>("TotalOccur");
+                    b.Property<long>("TotalOccur");
 
-                    b.Property<Int64>("TotalWords");
+                    b.Property<long>("TotalWords");
 
                     b.Property<string>("WordDescription");
 
@@ -132,14 +132,14 @@ namespace QRCodeMain.Migrations
 
             modelBuilder.Entity("VocabularyAnalyser.Model.Language", b =>
                 {
-                    b.Property<Int64>("LanguageId")
+                    b.Property<long>("LanguageId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("LanguageCode");
 
                     b.Property<string>("LanguageName");
 
-                    b.Property<Int64>("LanguageType");
+                    b.Property<long>("LanguageType");
 
                     b.HasKey("LanguageId");
 
@@ -151,14 +151,14 @@ namespace QRCodeMain.Migrations
 
             modelBuilder.Entity("VocabularyAnalyser.Model.MyVocabularyStatistics", b =>
                 {
-                    b.Property<Int64>("MyVocabularyStatisticsId")
+                    b.Property<long>("MyVocabularyStatisticsId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<double>("CurrentScore");
 
-                    b.Property<Int64>("LanguageId");
+                    b.Property<long>("LanguageId");
 
-                    b.Property<Int64>("TotalTestCount");
+                    b.Property<long>("TotalTestCount");
 
                     b.Property<string>("UserName");
 
@@ -174,18 +174,18 @@ namespace QRCodeMain.Migrations
 
             modelBuilder.Entity("VocabularyAnalyser.Model.MyVocabularyTest", b =>
                 {
-                    b.Property<Int64>("MyVocabularyTestId")
+                    b.Property<long>("MyVocabularyTestId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Int64>("CorrectWordCount");
+                    b.Property<long>("CorrectWordCount");
 
-                    b.Property<Int64>("LanguageId");
+                    b.Property<long>("LanguageId");
 
                     b.Property<double>("Score");
 
                     b.Property<DateTime>("TestTime");
 
-                    b.Property<Int64>("TestWordCount");
+                    b.Property<long>("TestWordCount");
 
                     b.Property<string>("UserName");
 
@@ -198,20 +198,20 @@ namespace QRCodeMain.Migrations
 
             modelBuilder.Entity("VocabularyAnalyser.Model.UserVocabulary", b =>
                 {
-                    b.Property<Int64>("UserVocabularyId")
+                    b.Property<long>("UserVocabularyId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Int64>("CriticalTimes");
+                    b.Property<long>("CriticalTimes");
 
-                    b.Property<Int64>("LanguageId");
+                    b.Property<long>("LanguageId");
 
-                    b.Property<Int64>("TestTimes");
+                    b.Property<long>("TestTimes");
 
                     b.Property<string>("UserName");
 
                     b.Property<string>("WordUnicode");
 
-                    b.Property<Int64>("WrongTimes");
+                    b.Property<long>("WrongTimes");
 
                     b.HasKey("UserVocabularyId");
 
@@ -222,7 +222,7 @@ namespace QRCodeMain.Migrations
 
             modelBuilder.Entity("VocabularyAnalyser.Model.VocabularyTestDetail", b =>
                 {
-                    b.Property<Int64>("VocabularyTestDetailId")
+                    b.Property<long>("VocabularyTestDetailId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AnswerContentA");
@@ -239,7 +239,7 @@ namespace QRCodeMain.Migrations
 
                     b.Property<string>("LanguageCode");
 
-                    b.Property<Int64>("VocabularyTestId");
+                    b.Property<long>("VocabularyTestId");
 
                     b.Property<string>("WordUnicode");
 

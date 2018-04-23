@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeteaseOcr", "NeteaseOcr\NeteaseOcr.csproj", "{73E9CBF5-B1E5-40D1-A97E-A9D11624903E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeteaseOcrClassic", "..\NeteaseOcrClassic\NeteaseOcrClassic.csproj", "{650976A7-6130-411D-9789-33CD190A9809}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{73E9CBF5-B1E5-40D1-A97E-A9D11624903E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73E9CBF5-B1E5-40D1-A97E-A9D11624903E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73E9CBF5-B1E5-40D1-A97E-A9D11624903E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73E9CBF5-B1E5-40D1-A97E-A9D11624903E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{650976A7-6130-411D-9789-33CD190A9809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{650976A7-6130-411D-9789-33CD190A9809}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{650976A7-6130-411D-9789-33CD190A9809}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{650976A7-6130-411D-9789-33CD190A9809}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {864149C9-687F-4CD2-B1D4-F0E99A0A9C5E}
+	EndGlobalSection
+EndGlobal

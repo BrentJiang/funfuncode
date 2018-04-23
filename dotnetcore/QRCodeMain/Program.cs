@@ -17,7 +17,7 @@ namespace QRCodeMain
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args)./*Seed().*/Run();
+            BuildWebHost(args).Seed().Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
