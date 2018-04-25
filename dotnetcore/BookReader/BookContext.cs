@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using WordAnalyser.Model;
+using MySQL.Data.EntityFrameworkCore.Extensions;
 
 namespace BookReader
 {
@@ -54,14 +55,27 @@ namespace BookReader
     {
         public static BookContext Create(string connectionString)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<BookContext>();
-            optionsBuilder.UseSqlite(connectionString);
+            try
+            {
+                var optionsBuilder = new DbContextOptionsBuilder<BookContext>();
+                if(connectionString.StartsWith(@"DataSource="))
+                    optionsBuilder.UseSqlite(connectionString);
+                else
+                {
+                    optionsBuilder.UseMySQL(connectionString);
+                }
 
-            // Ensure that the SQLite database and sechema is created!
-            var context = new BookContext(optionsBuilder.Options);
-            context.Database.EnsureCreated();
+                // Ensure that the SQLite database and sechema is created!
+                var context = new BookContext(optionsBuilder.Options);
+                context.Database.EnsureCreated();
 
-            return context;
+                return context;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
         }
     }
 }

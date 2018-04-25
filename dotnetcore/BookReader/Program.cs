@@ -215,13 +215,13 @@ namespace BookReader
             {
                 // must create new context since old context has dirty data
                 var context = Program.GetBookContext(connectionString);
-                context.Add(new BookException
+                context?.Add(new BookException
                 {
                     Top1020 = top1020,
                     ErrorMsg = e.ToString(),
                     BookInfo = fi.FullName
                 });
-                context.SaveChanges();
+                context?.SaveChanges();
                 Console.WriteLine($"{TotalBook}: Parse failed: {e}");
             }
         }
@@ -265,7 +265,7 @@ namespace BookReader
         static void Main(string[] args)
         {
             BookContext context = null;
-            if (args.Length == 2 && args[0] == "init")
+            if (args.Length == 2 && args[0].Trim().ToLower() == "initsqlite")
             {
                 context = GetBookContext("DataSource=" + args[1]);
                 if (context != null)
@@ -278,16 +278,44 @@ namespace BookReader
                 }
                 return;
             }
-            // <program> <dir> <language>
-            if (args.Length != 5)
+            if (args.Length == 2 && args[0].Trim().ToLower() == "initmysql")
             {
-                Console.WriteLine("Usage-1: <program> <dir(\"E:\\xiabook\")> <language(zh_CN|en_US)> <category(MordernMasterwork|MordernMasterwork|AcientMasterbook|MordernChildrenNobel|...)> <skip-lines> <dbfile(book.db)>");
-                Console.WriteLine("Usage-2: <program> init <dbfile(book.db)>");
+                context = GetBookContext(args[1]);
+                if (context != null)
+                {
+                    Console.WriteLine("success!");
+                }
+                else
+                {
+                    Console.WriteLine("Fail!");
+                }
+                return;
+            }
+            // <program> <dir> <language>
+            if (args.Length != 6)
+            {
+                Console.WriteLine("Usage-1: <program> <dir(\"E:\\xiabook\")> <language(zh_CN|en_US)> <category(MordernMasterwork|MordernMasterwork|AcientMasterbook|MordernChildrenNobel|...)> <skip-lines> sqlite <dbfile(book.db)>");
+                Console.WriteLine("Usage-2: <program> <dir(\"E:\\xiabook\")> <language(zh_CN|en_US)> <category(MordernMasterwork|MordernMasterwork|AcientMasterbook|MordernChildrenNobel|...)> <skip-lines> mysql <connection-string(server=localhost;port=3306;database=sakila;user=test;password=test)>");
+                Console.WriteLine("Usage-3: <program> initsqlite <dbfile(book.db)>");
+                Console.WriteLine("Usage-4: <program> initmysql <connection-string(server=localhost;port=3306;database=sakila;user=test;password=test)>");
                 return;
             }
             var datapath = args[0];//@"E:\xiabook";
-            var connectionString = "DataSource=" + args[4];
+            string connectionString = "";
+            if(args[4] == "sqlite")
+                connectionString = "DataSource=" + args[5];
+            else if (args[4] == "mysql")
+                connectionString = args[5];
+            else
+            {
+                return;
+            }
             context = GetBookContext(connectionString);
+            if (context == null)
+            {
+                Console.WriteLine("Failed to get book db context!");
+                return;
+            }
             var lang = context.Languages.SingleOrDefault(p => p.LanguageCode == args[1]);
             if (lang == null)
             {
