@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<errors>
+	<error id="NONE" value="0" prompt="PB:正确"/>
+	<error id="INVALID_DATA_SYNC_STATUS" value="5001" prompt="PB:不在已同步状态"/>
+	<error id="DATABASE_NOT_CONNECTE" value="5002" prompt="PB:数据库连接失败"/>
+	<error id="FRONT_NOT_CONNECTE" value="5003" prompt="PB:前置还未建立连接"/>
+	<error id="INVALID_LOGIN_FIELD" value="5004" prompt="PB:登录认证失败"/>
+	<error id="INVESTOR_NO_TRADING_PRIVILEGE" value="5005" prompt="PB:账户无交易权限"/>
+	<error id="DUPLICATE_LOGIN" value="5006" prompt="PB:重复的登录"/>
+	<error id="NOT_INITED" value="5009" prompt="PB:还没有初始化"/>
+	<error id="NOT_LOGIN_YET" value="5010" prompt="PB:还没有登录"/>
+  <error id="WRONG_INVESTOR_BROKER" value="5011" prompt="PB:账户信息有误"/>
+  <error id="EXCEED_LOGIN_SESSION" value="5012" prompt="PB:超过最大同时在线数"/>
+  <error id="INSTRUMENT_NOT_FOUND" value="5013" prompt="PB:找不到合约"/>
+	<error id="TRADING_ACCOUNT_NOT_FOUNT" value="5014" prompt="PB:找不到账户信息"/>
+	<error id="ORDER_NOT_FOUNT" value="5015" prompt="PB:找不到订单信息"/>
+	<error id="TRADE_NOT_FOUNT" value="5016" prompt="PB:找不到成交信息"/>
+  <error id="PRODUCT_CLASS_NOT_FOUNT" value="5017" prompt="PB:找不到交易产品信息"/>
+  <error id="ACTION_ORDER_NOT_FOUNT" value="5018" prompt="PB:找不到操作订单信息"/>
+  <error id="TRADE_INTERFACE_DISCONNECTED" value="5019" prompt="PB:交易接口已断开"/>
+  <error id="BAD_FIELD" value="5020" prompt="PB:字段不合法"/>
+  <error id="POSITION_NOT_FOUND" value="5021" prompt="PB:找不到持仓信息" />
+  <error id="COMMISSION_NOT_FOUND" value="5022" prompt="PB:找不到手续费率信息" />
+  <error id="MARGIN_NOT_FOUND" value="5023" prompt="PB:找不到保证金率信息" />
+  <error id="QUERY_FREQUENCY_LIMIT" value="5024" prompt="PB:查询频率超限" />
+  <error id="FAIL_FUND_NOTENOUGH" value="5025" prompt="PB:资金不够"/>
+  <error id="FAIL_POSITION_NOTENOUGH" value="5026" prompt="PB:仓位不够"/>
+  <error id="NO_PRIVILEGE" value="5030" prompt="PB:无此权限"/>
+	<error id="NO_FOUND_FUNCTION" value="5037" prompt="PB:无此功能"/>
+  <error id="OFFER_DB_FAIL_INSERT" value="5060" prompt="PB:报盘数据库插入失败"/>
+  <error id="EXCHANGE_REJECT_RESPONSE" value="5061" prompt="PB:交易所拒绝响应"/>
+  <error id="EXCHANGE_FAIL_CANCEL_ORDER" value="5062" prompt="PB:交易所撤单失败"/>
+  <error id="DUPLICATE_ORDERREF" value="5063" prompt="PB:重复订单编号或编号不合法"/>
+  <error id="RISK_CHECK_FAIL" value="5064" prompt="PB:风控校验失败"/>
+  <error id="RISK_MERGE_FAIL" value="5065" prompt="PB:风控规则合并出错"/>
+  <error id="RISK_NOT_FOUND" value="5066" prompt="PB:找不到风控规则信息"/>
+  <error id="INVALID_INVESTORID" value="5067" prompt="PB:投资者编码为空或编码不合法"/>
+  <error id="INVALID_ORDER_REQUEST" value="5068" prompt="PB:无效报单信息"/>
+  <error id="FAIL_UPDATE_POSITION_ACCOUNT" value="5069" prompt="PB:持仓资金更新错误"/>
+  <error id="FAIL_ORDER_REQUEST" value="5070" prompt="PB:报单失败"/>
+  <error id="ERROR_OPERATOR_ENBFLAG" value="5071" prompt="PB:操作员状态错误"/>
+  <error id="ERROR_OPERATOR_NOT_FOUND" value="5072" prompt="PB:找不到操作员信息"/>
+  <error id="TRADING_ACCOUNTASSET_NOT_FOUNT" value="5073" prompt="PB:找不到账户资金信息"/>
+  <error id="TRADING_ACCOUNTCOMBO_NOT_FOUNT" value="5074" prompt="PB:找不到投资组合信息"/>
+  <error id="TRADING_ADMINCOMMAND_FAIL_INSERT" value="5075" prompt="PB:command写入失败"/>
+  <error id="NOVALID_ADMINCOMMAND" value="5076" prompt="PB:无效的管理指令"/>
+  <error id="EXE_ADMINCOMMAND_FAIL" value="5077" prompt="PB:管理指令执行失败"/>
+  <error id="ORDER_NOT_CANCEL" value="5078" prompt="PB:当前状态不可撤单"/>
+  <error id="INVALID_ACCOUNT" value="5079" prompt="PB:无效的账户信息"/>
+  <error id="INVALID_COMBO" value="5080" prompt="PB:无效的组合信息"/>
+  <error id="BAD_SYSINFO" value="5081" prompt="PB:系统信息不全"/>
+</errors>
+

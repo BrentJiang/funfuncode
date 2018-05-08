@@ -1,0 +1,39 @@
+#!/bin/bash
+java -jar transfer/lib/transfer.jar output/DataType.h transfer/xml/EntityModel.xml transfer/xsl/DataType_template.xsl
+java -jar transfer/lib/transfer.jar output/DataTypeDefine.h transfer/xml/EntityModel.xml transfer/xsl/DataTypeDefine_template.xsl
+java -jar transfer/lib/transfer.jar output/TFDataStruct.h transfer/xml/EntityModel.xml transfer/xsl/TFDataStruct_template.xsl
+java -jar transfer/lib/transfer.jar output/SbeEntity.xml transfer/xml/EntityModel.xml transfer/xsl/SbeEntity.xml.xsl
+java -jar transfer/lib/transfer.jar output/BizDefs.h transfer/xml/EntityModel.xml transfer/xsl/SbeBizDefines.h.xsl
+java -jar transfer/lib/transfer.jar output/SbeEntity.h transfer/xml/EntityModel.xml transfer/xsl/SbeEntity.h.xsl
+java -jar transfer/lib/transfer.jar output/SbeEntity.cpp transfer/xml/EntityModel.xml transfer/xsl/SbeEntity.cpp.xsl
+java -jar transfer/lib/transfer.jar output/SbeEntityUtils.h transfer/xml/EntityModel.xml transfer/xsl/SbeEntityUtils.h.xsl 
+java -jar transfer/lib/transfer.jar output/DBOperUtils.h transfer/xml/EntityModel.xml transfer/xsl/DBOperUtils_template.xsl 
+java -jar transfer/lib/transfer.jar output/ErrorDefine.h transfer/xml/error.xml transfer/xsl/ErrorDefine.h.xsl
+java -jar transfer/lib/transfer.jar output/ErrorDefine.cpp transfer/xml/error.xml transfer/xsl/ErrorDefine.cpp.xsl
+
+java -jar transfer/lib/transfer.jar output/DBSync4MySQL.sql transfer/xml/EntityModel.xml transfer/xsl/DataBase_template.xsl
+java -jar transfer/lib/transfer.jar output/SbePrintHelper.h transfer/xml/EntityModel.xml transfer/xsl/SbePrintHelper.h.xsl
+java -jar transfer/lib/transfer.jar output/TFPrintHelper.h transfer/xml/EntityModel.xml transfer/xsl/TFPrintHelper.h.xsl
+java -jar transfer/lib/transfer.jar output/DBView.xml transfer/xml/EntityModel.xml transfer/xsl/DBView.xml.xsl
+java -jar transfer/lib/transfer.jar output/createView.sql.template output/DBView.xml transfer/xsl/DBView.xsl
+cd output
+java -jar -Dsbe.target.language=cpp ../transfer/lib/sbe-tool-1.6.0-all.jar SbeEntity.xml
+cd ..
+
+java -jar transfer/lib/transfer.jar output/tfzq_stp/SbeInclude.h transfer/xml/EntityModel.xml transfer/xsl/SbeInclude.h.xsl
+cp output/TFDataStruct.h ../source/tfpbapi/TFDataStruct.h
+cp output/DataType.h ../source/model/DataType.h
+cp output/DBOperUtils.h ../source/utils/DBOperUtils.h
+cp output/DataType.h ../source/tfpbapi/TFDataType.h
+cp -rf output/tfzq_stp/*.h ../source/sbebiz/tfzq/
+cp output/SbeEntity.h ../source/sbebiz/
+cp output/SbeEntity.cpp ../source/sbebiz/
+cp output/BizDefs.h ../source/sbebiz/
+cp output/SbeEntityUtils.h ../source/sbebiz/
+cp output/ErrorDefine.h ../source/model/
+cp output/ErrorDefine.cpp ../source/model/
+cp output/SbePrintHelper.h ../source/model/
+cp output/TFPrintHelper.h ../source/tfpbapi/
+cp output/DBSync4MySQL.sql ../app_home/install/createTables.sql
+cp output/createView.sql.template ../app_home/install/createView.sql.template
+

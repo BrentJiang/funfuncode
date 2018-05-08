@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using WordAnalyser.Model;
-using MySQL.Data.EntityFrameworkCore.Extensions;
 
 namespace BookReader
 {

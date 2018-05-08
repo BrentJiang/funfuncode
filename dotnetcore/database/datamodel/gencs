@@ -1,0 +1,5 @@
+#!/bin/bash
+java -jar transfer/lib/transfer.jar ../entitymodel/DataType.cs transfer/xml/EntityModel.xml transfer/xsl/DataType_template_cs.xsl
+java -jar transfer/lib/transfer.jar ../entitymodel/DataStruct.cs transfer/xml/EntityModel.xml transfer/xsl/DataStruct_template_cs.xsl
+java -jar transfer/lib/transfer.jar ../entitymodel/AllEnumInfo.cs transfer/xml/EntityModel.xml transfer/xsl/DataTypeToEnum_template_cs.xsl
+java -jar transfer/lib/transfer.jar ../entitymodel/BookContext.cs transfer/xml/EntityModel.xml transfer/xsl/DbContext_template_cs.xsl
