@@ -1,6 +1,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using EntityModelCreator.models;
 
 namespace TBondMMDataCS
 {
